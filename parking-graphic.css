@@ -1,0 +1,27 @@
+body{margin:0;padding:24px;background:white}main{max-width:960px;margin:auto}*{box-sizing:border-box}
+:root{--graphic-font:Avenir,'Trebuchet MS',sans-serif}
+
+#nobel-clean-lines{background:#fff;color:#222;font-family:var(--graphic-font)}
+#nobel-clean-lines .scroll{height:450px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;scrollbar-color:#ccc #fff}
+#nobel-clean-lines .travel{height:4100px}
+#nobel-clean-lines .stage{height:450px;position:sticky;top:0;background:#fff;overflow:hidden}
+
+
+
+#nobel-clean-lines svg{width:100%;height:450px;display:block;overflow:visible}
+#nobel-clean-lines svg text{font-family:var(--graphic-font);fill:#444;font-size:12px;text-anchor:middle}
+#nobel-clean-lines .paint{fill:none;stroke:#aca9a2;stroke-width:3;stroke-linejoin:miter;stroke-linecap:butt}
+#nobel-clean-lines svg .stamp{fill:#fff;font-family:Impact,'Arial Narrow',sans-serif;font-weight:900;font-size:30px;letter-spacing:0;text-anchor:middle}
+
+
+
+
+#nobel-clean-lines svg .opening-number{font:400 64px var(--graphic-font);fill:#222;letter-spacing:-3px}
+#nobel-clean-lines svg .opening-label{font:400 13px var(--graphic-font);fill:#666}
+
+#nobel-clean-lines .stamp{display:none}
+
+@media(max-width:450px){body{padding:12px}#nobel-clean-lines svg text{font-size:11px}}
+
+/* Hide the scroll indicator while retaining wheel, touch, and keyboard scrolling. */
+#nobel-clean-lines .scroll::-webkit-scrollbar{display:none}
