@@ -1,0 +1,199 @@
+/* Shared circles in every scene; portraits appear only when there is room. */
+#nobel-clean-lines {
+  font-family: var(--graphic-font);
+}
+#nobel-clean-lines .nobel-svg {
+  width: 100%;
+  height: calc(100svh - 105px);
+  display: block;
+  overflow: visible;
+}
+#nobel-clean-lines svg text {
+  font: 13px var(--graphic-font);
+  fill: #444;
+  text-anchor: middle;
+}
+#nobel-clean-lines .paint {
+  fill: none;
+  stroke-linejoin: miter;
+  stroke-linecap: butt;
+}
+#nobel-clean-lines svg .opening-number {
+  font: 400 48px var(--graphic-font);
+  fill: #222;
+}
+#nobel-clean-lines svg .opening-label {
+  font: 13px var(--graphic-font);
+  fill: #777;
+}
+#nobel-clean-lines .bay-label {
+  font-size: 13px;
+}
+#nobel-clean-lines .person {
+  cursor: pointer;
+  outline: none;
+}
+#nobel-clean-lines .person-ring {
+  vector-effect: non-scaling-stroke;
+}
+/* Keep each circle's own color and weight on hover. Keyboard focus uses a
+   separate outer indicator, rather than turning one data mark black. */
+#nobel-clean-lines .person:focus-visible .person-hit {
+  stroke: #555;
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+#nobel-clean-lines .person-label {
+  font-size: 11px;
+}
+#nobel-clean-lines .timeline-stem {
+  fill: none;
+  stroke: #d2d2cf;
+  stroke-width: 1;
+}
+#nobel-clean-lines .year-axis {
+  stroke: #aaa;
+  stroke-width: 1;
+}
+#nobel-clean-lines .year-label {
+  fill: #888;
+  font-size: 11px;
+}
+#nobel-clean-lines .axis-title {
+  fill: #777;
+  font-size: 12px;
+}
+.graphic-top {
+  display: flex;
+  justify-content: space-between;
+  color: #777;
+  font: 11px var(--graphic-font);
+  padding: 0 0 12px;
+  border-bottom: 1px solid #eee;
+}
+.graphic-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 9px 24px;
+  padding: 0 12px 10px;
+  font: 12px var(--graphic-font);
+  color: #555;
+}
+.graphic-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.graphic-legend i {
+  width: 10px;
+  height: 10px;
+  border: 1px solid;
+  border-radius: 50%;
+  background: white;
+}
+.laureate-tooltip {
+  position: fixed;
+  z-index: 20;
+  width: min(340px, calc(100vw - 24px));
+  padding: 20px;
+  background: white;
+  border: 1px solid #e3e3df;
+  box-shadow: 0 5px 24px #0001;
+  font: 13px/1.5 var(--graphic-font);
+}
+.laureate-tooltip[hidden] {
+  display: none;
+}
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-right: 12px;
+}
+.detail-head img {
+  width: 60px;
+  height: 60px;
+  flex: none;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--tooltip-color);
+}
+.detail-head strong {
+  display: block;
+  font: 20px/1.15 var(--graphic-font);
+  color: #222;
+  margin-bottom: 5px;
+}
+.detail-head span {
+  font-size: 11px;
+  color: #777;
+}
+.detail-close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: 0;
+  background: none;
+  color: #777;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.laureate-tooltip .detail-motivation {
+  font: 16px/1.45 var(--reading-font);
+  margin: 17px 0 12px;
+}
+.laureate-tooltip .detail-affiliation {
+  color: #777;
+  font-size: 11px;
+  margin: 10px 0;
+}
+.profile-link {
+  display: block;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #bbb;
+  padding: 4px 0;
+  margin-top: 10px;
+  font: 12px var(--graphic-font);
+  cursor: pointer;
+}
+.source-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #777;
+  text-decoration: none;
+}
+@media (max-width: 650px) {
+  .graphic-legend {
+    font-size: 11px;
+    gap: 7px 14px;
+    padding-bottom: 5px;
+  }
+  #nobel-clean-lines .bay-label {
+    font-size: 11px;
+  }
+}
+/* Quiet, consistent editorial treatment for the data layer. */
+#nobel-clean-lines .person-photo {
+  filter: grayscale(1);
+}
+#nobel-clean-lines .person:focus-visible .person-photo,
+#nobel-clean-lines .person.is-hovered .person-photo {
+  filter: none;
+}
+#nobel-clean-lines svg .opening-number {
+  font-size: 42px;
+  letter-spacing: -1.5px;
+}
+#nobel-clean-lines svg .opening-label {
+  font-size: 12px;
+}
+#nobel-clean-lines .person-ring {
+  stroke-linejoin: round;
+}
+.graphic-legend {
+  padding-top: 12px;
+}

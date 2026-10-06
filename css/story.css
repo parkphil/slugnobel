@@ -1,0 +1,119 @@
+/* Article and pacing. The graphic has a reading area above the data, not a sidebar. */
+:root {
+  --paper: #fff;
+  --ink: #222;
+  --muted: #707070;
+  --rule: #ddd;
+  --graphic-font: "Helvetica Neue", Arial, sans-serif;
+  --reading-font: Georgia, "Times New Roman", serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+.prose {
+  max-width: 660px;
+  margin: auto;
+  padding: 80px 24px;
+  font: 19px/1.75 var(--reading-font);
+}
+.prose p {
+  margin: 0 0 26px;
+}
+h1 {
+  font: 400 40px/1.2 var(--reading-font);
+  margin: 0 0 22px;
+}
+.byline,
+.credits {
+  font: 12px/1.6 var(--graphic-font);
+  color: var(--muted);
+}
+.scrolly {
+  position: relative;
+}
+.sticky-graphic {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  margin: 0;
+  padding: 20px max(24px, calc((100vw - 1180px) / 2)) 16px;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+.story-steps {
+  position: relative;
+  margin-top: -100svh;
+  pointer-events: none;
+}
+/* 230 viewport-heights of scroll per passage, with a long stable reading hold. */
+.step {
+  min-height: 230svh;
+  padding: 12svh 24px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.text-box {
+  width: min(100%, 630px);
+  padding: 22px 27px;
+  background: rgba(255, 255, 255, 0.97);
+  pointer-events: auto;
+  border: 1px solid #eee;
+  font: 18px/1.5 var(--reading-font);
+}
+.text-box h2 {
+  font: 500 24px/1.22 var(--graphic-font);
+  letter-spacing: -0.5px;
+  margin: 0 0 12px;
+}
+.text-box p {
+  margin: 0;
+}
+.text-box p + p {
+  margin-top: 12px;
+}
+.text-box .editor-note {
+  font: 11px/1.5 var(--graphic-font);
+  color: #87694d;
+}
+.explore-step {
+  min-height: 300svh;
+}
+.closing-text {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+@media (max-width: 700px) {
+  .prose {
+    padding: 55px 24px;
+    font-size: 18px;
+  }
+  h1 {
+    font-size: 34px;
+  }
+  .sticky-graphic {
+    padding: 16px 16px 12px;
+  }
+  .step {
+    padding: 10svh 16px 0;
+    min-height: 250svh;
+  }
+  .text-box {
+    padding: 17px 20px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .text-box h2 {
+    font-size: 21px;
+  }
+  .explore-step {
+    min-height: 320svh;
+  }
+}
