@@ -1,0 +1,32 @@
+.year-story, .faculty-story {
+  position: absolute;
+  top: 27svh;
+  left: 50%;
+  width: min(1120px, calc(100vw - 48px));
+  aspect-ratio: 1200 / 520;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+.year-story { z-index: 3; }
+.faculty-story { z-index: 4; }
+.year-story__svg, .faculty-story__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.year-story__svg--mobile, .faculty-story__svg--mobile { display: none; }
+.year-story__heading, .faculty-story__heading { fill: #272c29; font: 18px Arial, sans-serif; }
+.year-story__dot { cursor: pointer; pointer-events: all; }
+.year-story__dot:hover, .year-story__dot:focus-visible { stroke: #252b29; stroke-width: 2; outline: none; }
+.faculty-story__stem { fill: none; stroke: #aeb9b2; stroke-width: 1.3; opacity: .15; vector-effect: non-scaling-stroke; transition: opacity .16s ease; }
+.faculty-story__stem.is-active { opacity: .8; stroke-width: 2; }
+.faculty-story__ring { stroke: white; stroke-width: 2; }
+.faculty-story__mark { cursor: pointer; pointer-events: all; }
+.faculty-story__mark:hover .faculty-story__ring, .faculty-story__mark:focus-visible .faculty-story__ring { stroke: #252b29; stroke-width: 2.5; }
+.faculty-story__name { fill: #39413c; font: 13px Arial, sans-serif; text-anchor: middle; pointer-events: none; }
+.intro-scrolly__step--year { min-height: 145svh; }
+.intro-scrolly__step--year .intro-scrolly__box { top: 70svh; }
+.intro-scrolly__step--year[data-timeline-step="faculty"] { min-height: 185svh; }
+@media (max-width: 700px) {
+  .year-story, .faculty-story { top: 19svh; width: min(400px, calc(100vw - 24px)); aspect-ratio: 500 / 770; }
+  .year-story__svg--desktop, .faculty-story__svg--desktop { display: none; }
+  .year-story__svg--mobile, .faculty-story__svg--mobile { display: block; }
+  .faculty-story__name { font-size: 10px; }
+}

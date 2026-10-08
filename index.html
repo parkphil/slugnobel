@@ -6,11 +6,14 @@
     <title>Berkeley Nobel story — scaffold</title>
     <link rel="stylesheet" href="css/story.css" />
     <link rel="stylesheet" href="css/graphic.css" />
-    <link rel="stylesheet" href="css/timeline.css" />
+    <link rel="stylesheet" href="css/intro.css" />
+    <link rel="stylesheet" href="css/parking-lot.css" />
+    <link rel="stylesheet" href="css/decade.css" />
+    <link rel="stylesheet" href="css/women-age.css" />
+    <link rel="stylesheet" href="css/year-timeline.css" />
   </head>
   <body>
     <main>
-      <!-- 1. OPENING: supplied copy. Edit directly here. -->
       <section class="prose opening-text">
         <p>
           In 1939, physicist Ernest Lawrence won Berkeley’s first Nobel prize
@@ -31,138 +34,125 @@
         </p>
       </section>
 
-      <!-- 2. VISUALS: full-screen graphic; boxes scroll over it.
-       Edit box text here. data-progress maps each box to an animation state. -->
-      <section class="scrolly" aria-label="Nobel data visuals">
-        <figure class="sticky-graphic" id="nobel-clean-lines">
-          <svg
-            class="nobel-svg"
-            role="img"
-            aria-label="A Nobel parking photograph becomes five painted parking spaces, followed by a timeline of 63 laureates"
-          >
-            <g class="opening">
-              <text class="opening-number" y="128">63</text>
-              <text class="opening-label" y="159">
-                Berkeley-affiliated Nobel laureates
-              </text>
-            </g>
-            <g class="lines"></g>
-            <g class="stems"></g>
-            <g class="labels"></g>
-            <g class="marks"></g>
-            <g class="axis"></g>
-          </svg>
-          <figcaption class="graphic-legend"></figcaption>
+      <section class="intro-scrolly" aria-label="Berkeley-connected Nobel laureates">
+        <figure class="intro-visual">
+          <div class="intro-visual__composition">
+            <div class="intro-visual__grid" id="intro-portrait-grid" aria-label="Berkeley-connected Nobel laureates"></div>
+          </div>
+            <div class="parking-lot__canvas">
+              <svg class="parking-lot__svg parking-lot__svg--desktop" viewBox="0 0 1200 510" role="img" aria-label="Five parking bays for the Nobel Prize fields">
+                <rect class="parking-lot__asphalt" x="24" y="45" width="1152" height="420" fill="#272b2f"/>
+                <path class="parking-lot__stripe" pathLength="1" d="M24 356 Q318 354 600 357 T1176 355"/>
+                <g class="parking-lot__stalls">
+                  <path pathLength="1" d="M85 95 Q83 252 85 426"/>
+                  <path pathLength="1" d="M290 95 Q292 248 290 426"/>
+                  <path pathLength="1" d="M495 95 Q493 255 495 426"/>
+                  <path pathLength="1" d="M700 95 Q702 245 700 426"/>
+                  <path pathLength="1" d="M905 95 Q903 257 905 426"/>
+                  <path pathLength="1" d="M1110 95 Q1112 251 1110 426"/>
+                </g>
+                <g class="parking-lot__dots"></g>
+              </svg>
+              <svg class="parking-lot__svg parking-lot__svg--mobile" viewBox="0 0 500 770" role="img" aria-label="Five parking bays for the Nobel Prize fields">
+                <rect class="parking-lot__asphalt" x="15" y="25" width="470" height="720" fill="#272b2f"/>
+                <path class="parking-lot__stripe" pathLength="1" d="M165 25 Q163 382 166 745"/>
+                <g class="parking-lot__stalls">
+                  <path pathLength="1" d="M27 60 Q238 58 475 60"/>
+                  <path pathLength="1" d="M27 190 Q241 192 475 190"/>
+                  <path pathLength="1" d="M27 320 Q236 318 475 320"/>
+                  <path pathLength="1" d="M27 450 Q244 452 475 450"/>
+                  <path pathLength="1" d="M27 580 Q237 578 475 580"/>
+                  <path pathLength="1" d="M27 710 Q239 712 475 710"/>
+                </g>
+                <g class="parking-lot__dots"></g>
+              </svg>
+              <div class="parking-lot__labels">
+                <div class="parking-lot__field" data-category="Physics"><span class="parking-lot__name">Physics</span><span class="parking-lot__count"></span></div>
+                <div class="parking-lot__field" data-category="Chemistry"><span class="parking-lot__name">Chemistry</span><span class="parking-lot__count"></span></div>
+                <div class="parking-lot__field" data-category="Economics"><span class="parking-lot__name">Economics</span><span class="parking-lot__count"></span></div>
+                <div class="parking-lot__field" data-category="Physiology or Medicine"><span class="parking-lot__name">Medicine</span><span class="parking-lot__count"></span></div>
+                <div class="parking-lot__field" data-category="Literature"><span class="parking-lot__name">Literature</span><span class="parking-lot__count"></span></div>
+              </div>
+            </div>
+          <div class="decade-chart" aria-label="Berkeley Nobel laureates by decade">
+            <svg class="decade-chart__svg decade-chart__svg--desktop" viewBox="0 0 1200 520" role="img" aria-label="Nobel laureates from the 1930s through the 2020s, colored by prize field"></svg>
+            <svg class="decade-chart__svg decade-chart__svg--mobile" viewBox="0 0 500 770" role="img" aria-label="Nobel laureates from the 1930s through the 2020s, colored by prize field"></svg>
+          </div>
+          <div class="age-chart" aria-label="Age at award by decade">
+            <svg class="age-chart__svg age-chart__svg--desktop" viewBox="0 0 1200 520" role="img" aria-label="Individual ages and average age at award by decade"></svg>
+            <svg class="age-chart__svg age-chart__svg--mobile" viewBox="0 0 500 770" role="img" aria-label="Individual ages and average age at award by decade"></svg>
+          </div>
+          <div class="year-story" aria-label="Berkeley Nobel laureates by year"></div>
+          <div class="faculty-story" aria-label="Berkeley faculty laureates"></div>
+          <div class="intro-visual__footer">
+            <div class="intro-visual__key" aria-label="Portrait border colors show Nobel Prize category"></div>
+          </div>
         </figure>
-        <div class="story-steps">
-          <!-- Draft explanation: all text here can be edited independently of the animation. -->
-          <article class="step" data-scene="portraits">
-            <div class="text-box">
-              <h2>63 laureates with Berkeley ties</h2>
-              <p>
-                Each portrait represents one person in this dataset. Together,
-                their Nobel Prizes span 1934 to 2025. Hover or tap a portrait to
-                see the name, prize, and Berkeley connection.
-              </p>
+        <div class="intro-scrolly__steps">
+          <section class="intro-scrolly__step" data-focus="all" aria-label="All laureates"></section>
+          <section class="intro-scrolly__step" data-focus="Faculty" aria-label="Faculty laureates">
+            <div class="intro-scrolly__box">
+              <strong class="intro-scrolly__box-title">Faculty</strong>
+              <span class="intro-scrolly__box-count" data-focus-count></span>
+              <p class="intro-scrolly__box-copy">[Writing]</p>
             </div>
-          </article>
-          <article class="step" data-scene="portraits">
-            <div class="text-box">
-              <h2>Different paths through Berkeley</h2>
-              <p>
-                This list includes faculty, alumni, and long-term postdoctoral
-                researchers . . . .
-              </p>
+          </section>
+          <section class="intro-scrolly__step" data-focus="Alumni" aria-label="Alumni laureates">
+            <div class="intro-scrolly__box">
+              <strong class="intro-scrolly__box-title">Alumni</strong>
+              <span class="intro-scrolly__box-count" data-focus-count></span>
+              <p class="intro-scrolly__box-copy">[Writing]</p>
             </div>
-          </article>
-          <article class="step" data-scene="photo">
-            <div class="text-box">
-              <h2>Nobel Laureate parking spaces</h2>
-              <p>Berkeley’s Nobel laureates have reserved parking spaces.</p>
-              <p class="editor-note">[need photo cred]</p>
+          </section>
+          <section class="intro-scrolly__step" data-focus="Women" aria-label="Women laureates">
+            <div class="intro-scrolly__box">
+              <strong class="intro-scrolly__box-title">Women</strong>
+              <span class="intro-scrolly__box-count" data-focus-count></span>
+              <p class="intro-scrolly__box-copy">[Writing]</p>
             </div>
-          </article>
-          <article class="step" data-scene="trace">
-            <div class="text-box"><p>more text</p></div>
-          </article>
-          <article class="step" data-scene="frames">
-            <div class="text-box">
-              <h2>Five prize fields</h2>
-              <p>Five illustrated spaces group the laureates by prize field.</p>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="morph" aria-label="Portraits become colored marks"></section>
+          <section class="intro-scrolly__step" data-parking-step="context" aria-label="Berkeley Nobel parking spaces">
+            <div class="intro-scrolly__box intro-scrolly__box--parking">
+              <p>[Writing]</p>
             </div>
-          </article>
-          <article class="step" data-scene="categories">
-            <div class="text-box">
-              <p>
-                Physics and chemistry each have 21 laureates; economics has 11,
-                physiology or medicine has nine, and literature has one.
-              </p>
-            </div>
-          </article>
-          <article
-            class="step"
-            data-scene="categories"
-            data-highlight="Physics,Chemistry"
-          >
-            <div class="text-box">
-              <h2>Two thirds are in physics and chemistry</h2>
-              <p>
-                Each field accounts for 21 people. Together, they make up 42 of
-                the 63 laureates in this dataset. The remaining prizes are in
-                economics, physiology or medicine, and literature.
-              </p>
-            </div>
-          </article>
-          <article
-            class="step"
-            data-scene="categories"
-            data-highlight="Physiology or Medicine"
-          >
-            <div class="text-box">
-              <h2>Nine laureates in physiology or medicine</h2>
-              <p>
-                This group includes Randy Schekman, who shared the 2013 prize
-                for discoveries about how cells transport materials. Hover over
-                the circles to explore the other eight people in the group.
-              </p>
-            </div>
-          </article>
-          <article class="step" data-scene="timeline">
-            <div class="text-box">
-              <h2>prize by year</h2>
-              <p>more text explaining timeline</p>
-            </div>
-          </article>
-          <article class="step" data-scene="timeline">
-            <div class="text-box"><p>explanation text</p></div>
-          </article>
-          <article class="step" data-scene="faculty">
-            <div class="text-box">
-              <h2>faculty profiles</h2>
-              <p>explanation about faculty connection</p>
-            </div>
-          </article>
-          <article class="step explore-step" data-scene="faculty">
-            <div class="text-box">
-              <h2>Explore an individual career</h2>
-              <p>
-                Hover or tap a portrait, then select “Read faculty profile” to
-                open the biography. Each profile includes the research and
-                career details compiled by the reporting team.
-              </p>
-            </div>
-          </article>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="Physics" aria-label="Physics marks fill a parking bay">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="Chemistry" aria-label="Chemistry marks fill a parking bay">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="Economics" aria-label="Economics marks fill a parking bay">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="Physiology or Medicine" aria-label="Medicine marks fill a parking bay">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step" data-parking-step="Literature" aria-label="Literature marks fill a parking bay">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <!-- Future map views belong here, before the uninterrupted decade-to-age-to-year sequence. -->
+          <section class="intro-scrolly__step intro-scrolly__step--decade" data-decade-step="fields" aria-label="Prize fields by decade">
+            <div class="intro-scrolly__box intro-scrolly__box--decade"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step intro-scrolly__step--decade" data-decade-step="totals" aria-label="Total laureates by decade">
+            <div class="intro-scrolly__box intro-scrolly__box--decade"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step intro-scrolly__step--age" data-story-step="age" aria-label="Age at award by decade">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
+          <section class="intro-scrolly__step intro-scrolly__step--age" data-story-step="age-hold" aria-label="Age graph continued">
+            <div class="intro-scrolly__box intro-scrolly__box--story"><p>[Writing]</p></div>
+          </section>
         </div>
       </section>
 
-      <!-- Partner's biography dialogs share the people shown in the graphic. -->
-      <section id="faculty-timeline" aria-label="Faculty profile details">
-        <dialog aria-labelledby="detail-name">
-          <button class="close" aria-label="Close">×</button>
-          <div class="detail"></div>
-        </dialog>
-      </section>
-      <!-- 4. ENDING: placeholders only, ready for selected interview copy. -->
+      <dialog class="intro-profile" id="intro-profile" aria-labelledby="intro-profile-name">
+        <button class="intro-profile__close" type="button" aria-label="Close profile">×</button>
+        <div class="intro-profile__content"></div>
+      </dialog>
+
       <section class="prose closing-text">
         <p>interview section + conclusion</p>
       </section>
@@ -173,12 +163,11 @@
       role="tooltip"
       hidden
     ></div>
-    <script src="data/laureates.js"></script>
-    <script src="timeline-data.js"></script>
-    <script src="js/layouts.js"></script>
-    <script src="js/tooltip.js"></script>
-    <script src="js/graphic.js"></script>
-    <script src="js/scroll.js"></script>
-    <script src="js/timeline.js"></script>
+    <script src="js/intro.js"></script>
+    <script src="js/parking-lot.js"></script>
+    <script src="js/decade.js"></script>
+    <script src="js/women-age.js"></script>
+    <script src="js/year-timeline.js"></script>
+    <script src="js/parking-bridge.js"></script>
   </body>
 </html>
