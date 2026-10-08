@@ -1,0 +1,20 @@
+.bay-scroll { height: 1000svh; }
+.bay-frame { position: sticky; top: 0; margin: 0; height: 100svh; display: grid; align-items: center; padding: 24px; }
+#bay-map { width: min(1120px,100%); margin: auto; min-width: 0; overflow: hidden; }
+.bay-land { fill: #d5dede; stroke: #95a7ab; stroke-width: .65; vector-effect: non-scaling-stroke; }
+.bay-stem { stroke: #546971; stroke-width: 1.2; stroke-linecap: round; }
+.bay-column { cursor: pointer; }
+.bay-column-front { fill: #8ba4ab; fill-opacity: .48; stroke: #607b84; stroke-width: .7; }
+.bay-column-side { fill: #607b84; fill-opacity: .55; stroke: #607b84; stroke-width: .7; }
+.bay-column-cap { fill: #bfced1; fill-opacity: .8; stroke: #607b84; stroke-width: .7; }
+.bay-column:hover .bay-column-front { fill: #73939e; }
+#map-tooltip { max-height: 60vh; overflow: auto; }
+.bay-anchor { fill: white; stroke: #546971; stroke-width: 1.1; }
+.bay-label { fill: #272c29; font: 18px Arial, sans-serif; paint-order: stroke; stroke: white; stroke-width: 4px; stroke-linejoin: round; }
+.bay-total { fill: #687780; font: 12px Arial, sans-serif; }
+.bay-place { fill: #7d8c92; font: 12px Arial, sans-serif; paint-order: stroke; stroke: #fff; stroke-width: 3px; }
+.bay-water-label { fill: #82959c; font: italic 13px Georgia, serif; letter-spacing: .035em; }
+.bay-heading { fill: #272c29; font: 18px Arial, sans-serif; }
+.bay-dot { cursor: pointer; stroke: #fff; stroke-width: 1; }
+.bay-dot:hover,.bay-dot:focus-visible { stroke: #283d46; stroke-width: 2; outline: none; }
+@media(max-width:700px) { .bay-frame { padding: 14px; } }

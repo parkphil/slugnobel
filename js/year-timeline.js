@@ -20,14 +20,6 @@
     section.className = 'intro-scrolly__step intro-scrolly__step--year';
     section.dataset.timelineStep = name;
     section.setAttribute('aria-label', label);
-    if (name !== 'faculty') {
-      const box = document.createElement('div');
-      box.className = 'intro-scrolly__box intro-scrolly__box--story';
-      const text = document.createElement('p');
-      text.textContent = '[Writing]';
-      box.append(text);
-      section.append(box);
-    }
     return section;
   };
   const open = (person) => dispatchEvent(new CustomEvent('open-laureate-profile', { detail: { id: person.id } }));
@@ -63,44 +55,72 @@
     yearFigure.append(svg);
   }
   function renderFaculty(people, mobile) {
-    const faculty = people.filter((person) => person.relationship === 'Faculty');
+    // These four received their prizes before joining Berkeley's faculty.
+    const joinedAfterAward = new Set(['John Howard Northrop', 'Wendell Stanley', 'Charles Townes', 'Eric Betzig']);
+    const faculty = people.filter((person) => person.relationship === 'Faculty' && !joinedAfterAward.has(person.name));
     const svg = node('svg', {
       class: `faculty-story__svg faculty-story__svg--${mobile ? 'mobile' : 'desktop'}`,
-      viewBox: mobile ? '0 0 500 770' : '0 0 1200 520',
-      role: 'img', 'aria-label': 'Berkeley faculty Nobel laureates; select a portrait for the full description',
+      viewBox: '0 0 780 800',
+      role: 'group', 'aria-label': 'Berkeley faculty Nobel laureates; select a portrait for the full description',
     });
     const defs = node('defs');
     svg.append(defs);
-    svg.append(node('text', { class: 'faculty-story__heading', x: mobile ? 20 : 74, y: mobile ? 25 : 22 }, 'Berkeley faculty laureates'));
+    svg.append(node('text', { class: 'faculty-story__heading', x: 24, y: 26 }, 'Berkeley faculty and emeriti · 24'));
+    [300, 190, 80].forEach((radius) => svg.append(node('circle', { class: 'faculty-story__guide', cx: 390, cy: 390, r: radius })));
+    svg.append(node('text', { class: 'faculty-story__hint', x: 390, y: 783, 'text-anchor': 'middle' }, 'Select a portrait to read their profile.'));
+    svg.setAttribute('aria-label','24 laureates who were Berkeley faculty or emeriti at the time of their award; select a portrait for the full description');
     faculty.forEach((person, index) => {
-      const row = mobile ? Math.floor(index / 4) : Math.floor(index / 7);
-      const column = mobile ? index % 4 : index % 7;
-      const x = mobile ? 218 + column * 69 : 135 + column * 155;
-      const y = mobile ? 87 + row * 99 : [80, 205, 415, 535][row];
-      const anchor = mobile ? { x: 165, y: 80 + (Math.floor(person.year / 10) * 10 - 1930) / 10 * 59 } : { x: 96 + (person.year - 1930) * 1008 / 90, y: 356 };
-      const endY = y + (mobile ? 0 : y < 356 ? 40 : -40);
-      const stem = node('path', { class: 'faculty-story__stem', d: mobile
-        ? `M${anchor.x} ${anchor.y} Q${(anchor.x + x) / 2} ${anchor.y} ${x - 24} ${y}`
-        : `M${anchor.x} ${anchor.y} Q${anchor.x} ${(anchor.y + endY) / 2} ${x} ${endY}` });
-      svg.append(stem);
+      const ring = index < 12 ? 0 : index < 20 ? 1 : 2;
+      const slot = index - [0, 12, 20][ring];
+      const count = [12, 8, 4][ring];
+      const angle = -Math.PI / 2 + slot * Math.PI * 2 / count + [0, Math.PI / 8, Math.PI / 4][ring];
+      const centerX = 390;
+      const centerY = 390;
+      const radiusX = [300, 190, 80][ring];
+      const radiusY = radiusX;
+      const x = centerX + Math.cos(angle) * radiusX;
+      const y = centerY + Math.sin(angle) * radiusY;
       const clipId = `faculty-clip-${mobile ? 'm' : 'd'}-${person.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
-      const radius = mobile ? 20 : 45;
+      const radius = 46;
       const clip = node('clipPath', { id: clipId });
-      clip.append(node('circle', { cx: x, cy: y, r: radius - 5 }));
+      clip.append(node('circle', { cx: 0, cy: 0, r: radius - 5 }));
       defs.append(clip);
-      const mark = node('g', { class: 'faculty-story__mark', 'data-year': person.year });
+      const mark = node('g', { class: 'faculty-story__mark', 'data-year': person.year, transform: `translate(${x} ${y})` });
+      mark.dataset.orbitAngle = angle;
+      mark.dataset.orbitCenterX = centerX;
+      mark.dataset.orbitCenterY = centerY;
+      mark.dataset.orbitRadiusX = radiusX;
+      mark.dataset.orbitRadiusY = radiusY;
+      mark.dataset.orbitDirection = ring === 1 ? -1 : 1;
       interactive(mark, person);
-      mark.addEventListener('pointerenter', () => stem.classList.add('is-active'));
-      mark.addEventListener('pointerleave', () => stem.classList.remove('is-active'));
-      mark.addEventListener('focus', () => stem.classList.add('is-active'));
-      mark.addEventListener('blur', () => stem.classList.remove('is-active'));
-      mark.append(node('circle', { class: 'faculty-story__ring', cx: x, cy: y, r: radius, fill: colors[person.category] }));
-      mark.append(node('image', { x: x - radius + 5, y: y - radius + 5, width: (radius - 5) * 2, height: (radius - 5) * 2, href: person.photo, 'clip-path': `url(#${clipId})`, preserveAspectRatio: 'xMidYMid slice' }));
+      mark.append(node('circle', { class: 'faculty-story__ring', cx: 0, cy: 0, r: radius, fill: colors[person.category] }));
+      mark.append(node('image', { x: -radius + 5, y: -radius + 5, width: (radius - 5) * 2, height: (radius - 5) * 2, href: person.photo, 'clip-path': `url(#${clipId})`, preserveAspectRatio: 'xMidYMid slice' }));
       svg.append(mark);
-      svg.append(node('text', { class: 'faculty-story__name', x, y: y + radius + (mobile ? 16 : 20) }, person.name.split(' ').at(-1)));
     });
     facultyFigure.append(svg);
   }
+  let orbitTime = 0;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let previousFrame = 0;
+  let lastOrbitDraw = 0;
+  function animateOrbit(time) {
+    const active = facultyFigure.dataset.orbitReady === 'true' &&
+      !document.hidden && !reducedMotion.matches && !document.querySelector('#intro-profile[open]') && !facultyFigure.querySelector('.faculty-story__mark:hover, .faculty-story__mark:focus');
+    if (active && previousFrame) orbitTime += Math.min(time - previousFrame, 100);
+    if (active && time - lastOrbitDraw > 32) {
+      const orbitAngle = Math.sin(orbitTime / 6000) * .10;
+      facultyFigure.querySelectorAll('.faculty-story__mark').forEach((mark) => {
+        const angle = Number(mark.dataset.orbitAngle) + orbitAngle * Number(mark.dataset.orbitDirection);
+        const x = Number(mark.dataset.orbitCenterX) + Math.cos(angle) * Number(mark.dataset.orbitRadiusX);
+        const y = Number(mark.dataset.orbitCenterY) + Math.sin(angle) * Number(mark.dataset.orbitRadiusY);
+        mark.setAttribute('transform', `translate(${x} ${y})`);
+      });
+      lastOrbitDraw = time;
+    }
+    previousFrame = time;
+    requestAnimationFrame(animateOrbit);
+  }
+  requestAnimationFrame(animateOrbit);
   fetch('data/laureates-full.json')
     .then((response) => { if (!response.ok) throw new Error('Laureate data could not load'); return response.json(); })
     .then((people) => {
@@ -110,8 +130,14 @@
       renderFaculty(people, false);
       renderFaculty(people, true);
       const firstDecade = steps.querySelector('[data-decade-step="fields"]');
-      steps.insertBefore(step('year', 'Year of award'), firstDecade);
-      steps.insertBefore(step('share', 'Prize share by year'), firstDecade);
+      const yearStep = step('year', 'Year of award');
+      const yearBox = document.createElement('div');
+      yearBox.className = 'intro-scrolly__box intro-scrolly__box--story';
+      const yearCopy = document.createElement('p');
+      yearCopy.textContent = 'Laureates received their Nobel Prizes between 1934 and 2025.';
+      yearBox.append(yearCopy);
+      yearStep.append(yearBox);
+      steps.insertBefore(yearStep, firstDecade);
       steps.append(step('faculty', 'Faculty laureates'));
       dispatchEvent(new Event('year-timeline:ready'));
     })

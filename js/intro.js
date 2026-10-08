@@ -31,9 +31,12 @@
     });
   };
   function updateFocus() {
+    const heading=document.querySelector('.intro-visual__heading');
+    const firstBox=focusSteps[1]?.querySelector('.intro-scrolly__box');
+    if(heading&&firstBox){const progress=Math.max(0,Math.min(1,(innerHeight-firstBox.getBoundingClientRect().top)/(innerHeight*.22)));heading.style.opacity=1-progress;}
     let relationship = 'all';
     for (const step of focusSteps.slice(1)) {
-      const element = step.querySelector('.intro-scrolly__box');
+      const element = step.querySelector('.intro-scrolly__box') || step;
       const box = element.getBoundingClientRect();
       if (box.top < innerHeight * .66) relationship = step.dataset.focus;
     }
@@ -66,6 +69,7 @@
     content.replaceChildren();
     content.style.setProperty('--category-color', colors[person.category]);
     const head = make('div', 'intro-profile__head');
+    const body = make('div', 'intro-profile__body');
     const photo = make('img');
     photo.src = person.photo;
     photo.alt = '';
@@ -75,14 +79,15 @@
       make('h3', null, person.name),
     );
     title.querySelector('h3').id = 'intro-profile-name';
-    head.append(photo, title);
-    content.append(head);
-    content.append(make('p', 'intro-profile__meta', `Berkeley connection: ${person.relationship}${person.credentials ? ` · ${person.credentials}` : ''}`));
+    head.append(photo);
+    body.append(title);
+    content.append(head, body);
+    body.append(make('p', 'intro-profile__meta', `${person.relationship}${person.credentials ? ` · ${person.credentials}` : ''}`));
     const paragraphs = person.relationship === 'Faculty' && biographies.has(normalize(person.name))
       ? biographies.get(normalize(person.name))
       : [person.description || person.motivation];
-    paragraphs.forEach((paragraph) => content.append(make('p', 'intro-profile__description', paragraph)));
-    if (person.nobelUrl) content.append(sourceLink(person));
+    paragraphs.forEach((paragraph) => body.append(make('p', 'intro-profile__description', paragraph)));
+    if (person.nobelUrl) body.append(sourceLink(person));
     dialog.showModal();
   }
   function preview(person) {
@@ -106,20 +111,38 @@
     const meta = make('span', 'laureate-tooltip__meta', `${person.year} · ${person.category}`);
     const description = make('p', 'laureate-tooltip__description', preview(person));
     tooltip.append(title, meta, description);
+    if(target.dataset.affiliations)tooltip.append(make('p','laureate-tooltip__meta',target.dataset.affiliations));
     tooltip.hidden = false;
     moveTooltip(x, y);
   }
-  const interactiveTarget = (target) => target?.closest?.('.intro-portrait, .parking-lot__dot, .decade-chart__target, .age-chart__person, .year-story__dot, .faculty-story__mark, .parking-bridge__item');
+  const selector = '.intro-portrait, .parking-lot__dot, .age-chart__person, .year-story__dot, .faculty-story__mark, .parking-bridge__item, .map-story__dot';
+  const interactiveTarget = (target) => {
+    const dot = target?.closest?.(selector);
+    if (!dot) return null;
+    for (let node = dot; node && node !== document.body; node = node.parentElement) {
+      const style = getComputedStyle(node);
+      if (style.visibility === 'hidden' || style.display === 'none' || Number(style.opacity) < .05) return null;
+    }
+    return getComputedStyle(dot).pointerEvents === 'none' ? null : dot;
+  };
+  let hoveredDot = null;
   document.addEventListener('pointerover', (event) => {
     const target = interactiveTarget(event.target);
-    if (target) showTooltip(target, event.clientX, event.clientY);
+    if (target) { hoveredDot = target; showTooltip(target, event.clientX, event.clientY); }
   });
   document.addEventListener('pointermove', (event) => {
-    if (!tooltip.hidden && interactiveTarget(event.target)) moveTooltip(event.clientX, event.clientY);
+    const target = interactiveTarget(event.target);
+    if (!target) { hoveredDot = null; tooltip.hidden = true; return; }
+    if (target !== hoveredDot) { hoveredDot = target; showTooltip(target, event.clientX, event.clientY); }
+    else if (!tooltip.hidden) moveTooltip(event.clientX, event.clientY);
   });
   document.addEventListener('pointerout', (event) => {
-    if (interactiveTarget(event.target) && !interactiveTarget(event.relatedTarget)) tooltip.hidden = true;
+    if (interactiveTarget(event.target) && interactiveTarget(event.relatedTarget) !== hoveredDot) {
+      hoveredDot = null;
+      tooltip.hidden = true;
+    }
   });
+  addEventListener('scroll', () => { hoveredDot = null; tooltip.hidden = true; }, { passive: true });
   document.addEventListener('focusin', (event) => {
     const target = interactiveTarget(event.target);
     if (target) { const rect = target.getBoundingClientRect(); showTooltip(target, rect.right, rect.top); }
@@ -145,8 +168,9 @@
       currentPeople = people;
       people.sort((a, b) => a.year - b.year || a.name.localeCompare(b.name));
       for (const step of focusSteps.slice(1)) {
-        const count = people.filter((person) => step.dataset.focus === 'Women' ? person.gender === 'female' : person.relationship === step.dataset.focus).length;
-        step.querySelector('[data-focus-count]').textContent = `${count} of ${people.length}`;
+        const count = people.filter((person) => step.dataset.focus === 'all' || (step.dataset.focus === 'Women' ? person.gender === 'female' : person.relationship === step.dataset.focus)).length;
+        const countLabel=step.querySelector('[data-focus-count]');
+        if(countLabel)countLabel.textContent = `${count} of ${people.length}`;
       }
       for (const [category, color] of Object.entries(colors)) {
         const item = make('button', 'intro-visual__key-item');

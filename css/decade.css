@@ -30,12 +30,12 @@
 .decade-chart__label,
 .decade-chart__count,
 .decade-chart__note,
-.decade-chart__heading { fill: #272c29; font-family: Arial, sans-serif; }
+.decade-chart__heading { fill: #272c29; font-family: var(--graphic-font); }
 .decade-chart__heading { font-size: 18px; font-weight: 500; }
 .decade-chart__label { font-size: 15px; text-anchor: middle; }
 .decade-chart__count { font-size: 15px; font-variant-numeric: tabular-nums; text-anchor: middle; opacity: 0; }
 .decade-chart__note { fill: #5a625e; font-size: 12px; }
-.decade-chart__target { opacity: 0; pointer-events: all; cursor: pointer; }
+.decade-chart__target { opacity: 0; pointer-events: none; }
 .intro-scrolly__step--decade { min-height: 135svh; }
 .intro-scrolly__step--decade:last-child { min-height: 150svh; }
 .intro-scrolly__box--decade {
@@ -46,7 +46,7 @@
   padding: 24px 28px;
   border: 1px solid #d9dcd8;
   box-shadow: 0 6px 23px #0000000d;
-  font: 20px/1.42 Georgia, serif;
+  font: 20px/1.42 var(--reading-font);
   color: #222;
 }
 .intro-scrolly__box--decade p { margin: 0; }

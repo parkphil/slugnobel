@@ -8,6 +8,12 @@ birth-country values and award-affiliation strings, plus parsed locations.
 - Birth countries with a code: 63
 - Missing or unrecognized birth country: none
 - People without an award-affiliation entry: Czesław Miłosz, Kary Mullis
+
+The article map adds an explicit display override for Czesław Miłosz: UC Berkeley,
+where he was professor emeritus when awarded in 1980. This brings the Berkeley
+map to 24 faculty members and professor emeriti, matching the faculty orbit.
+The original Nobel affiliation record remains empty. Source:
+[Berkeley's Miłosz obituary](https://newsarchive.berkeley.edu/news/berkeleyan/2004/08/18_milosz.shtml).
 - Stanford University or its medical school at time of award: 6 people (Henry Taube, Andrew Z. Fire, Willis Lamb, Carolyn Bertozzi, Robert Laughlin, Steven Chu)
 - Affiliation entries without a city-level place: Howard Hughes Medical Institute, USA, LIGO/VIRGO Collaboration
 

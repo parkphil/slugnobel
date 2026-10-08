@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bay Area affiliation — zoom prototype</title>
+  <link rel="stylesheet" href="css/map-prototype.css">
+  <link rel="stylesheet" href="css/bay-zoom-prototype.css">
+  <script defer src="js/vendor/d3.min.js"></script>
+  <script defer src="js/vendor/topojson-client.min.js"></script>
+  <script defer src="js/bay-zoom-prototype.js"></script>
+</head>
+<body>
+  <main class="bay-scroll">
+    <figure class="bay-frame">
+      <svg id="bay-map" viewBox="0 0 1200 640" role="img" aria-label="Scroll from birthplace countries to Berkeley and Stanford affiliations at the time of the award"></svg>
+      <p id="bay-error" hidden></p>
+    </figure>
+  </main>
+  <aside id="map-tooltip" hidden></aside>
+  <dialog id="map-profile"><button class="profile-close" aria-label="Close profile">×</button><div id="profile-content"></div></dialog>
+</body>
+</html>

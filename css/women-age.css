@@ -23,7 +23,7 @@
 .age-chart__mean-dot { fill: #c9a33c; stroke: white; stroke-width: 2; }
 .age-chart__heading,
 .age-chart__note,
-.age-chart__value { fill: #272c29; font-family: Arial, sans-serif; }
+.age-chart__value { fill: #272c29; font-family: var(--graphic-font); }
 .age-chart__heading { font-size: 18px; }
 .age-chart__note { fill: #5a625e; font-size: 12px; }
 .age-chart__value { font-size: 12px; text-anchor: middle; }
