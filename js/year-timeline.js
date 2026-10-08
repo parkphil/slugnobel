@@ -40,13 +40,19 @@
       role: 'img', 'aria-label': 'Berkeley Nobel laureates by year, one dot per person',
     });
     svg.append(node('text', { class: 'year-story__heading', x: mobile ? 20 : 74, y: mobile ? 25 : 38 }, 'Year of award'));
+    // Desktop stacks dots in two-year columns (22px apart, wider than a dot) so stacks stay
+    // vertical and neighbors never overlap; each column sits at the middle of its two years.
+    const categoryOrder = Object.keys(colors);
+    const ordered = people.slice().sort((a, b) => a.year - b.year
+      || categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) || a.name.localeCompare(b.name));
     const bins = new Map();
-    people.forEach((person) => {
+    ordered.forEach((person) => {
       const decade = Math.floor(person.year / 10) * 10;
-      const bin = mobile ? decade : Math.floor((person.year - 1930) / 3);
+      const column = Math.floor((person.year - 1930) / 2);
+      const bin = mobile ? decade : column;
       const index = bins.get(bin) || 0;
       bins.set(bin, index + 1);
-      const x = mobile ? 184 + index * 20 : 96 + (person.year - 1930) * 1008 / 90;
+      const x = mobile ? 184 + index * 20 : 96 + (column * 2 + .5) * 1008 / 90;
       const y = mobile ? 80 + (decade - 1930) / 10 * 59 : 333 - index * 19;
       const dot = node('circle', { class: 'year-story__dot', cx: x, cy: y, r: 8, fill: colors[person.category], 'data-portion': person.portion, 'data-year': person.year });
       interactive(dot, person);
@@ -134,7 +140,7 @@
       const yearBox = document.createElement('div');
       yearBox.className = 'intro-scrolly__box intro-scrolly__box--story';
       const yearCopy = document.createElement('p');
-      yearCopy.textContent = 'Laureates received their Nobel Prizes between 1934 and 2025.';
+      yearCopy.textContent = 'Berkeley Laureates received their Nobel Prizes between 1934 and 2025.';
       yearBox.append(yearCopy);
       yearStep.append(yearBox);
       steps.insertBefore(yearStep, firstDecade);

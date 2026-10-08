@@ -65,6 +65,16 @@
     link.rel = 'noopener noreferrer';
     return link;
   };
+  // Descriptions in laureates-full.json come from Berkeley Inspire's Nobel page.
+  const inspireCitation = () => {
+    const note = make('p', 'intro-profile__source', 'From ');
+    const link = make('a', null, 'Berkeley Inspire');
+    link.href = 'https://inspire.berkeley.edu/get-inspired/nobels/';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    note.append(link);
+    return note;
+  };
   function openProfile(person) {
     content.replaceChildren();
     content.style.setProperty('--category-color', colors[person.category]);
@@ -83,10 +93,14 @@
     body.append(title);
     content.append(head, body);
     body.append(make('p', 'intro-profile__meta', `${person.relationship}${person.credentials ? ` · ${person.credentials}` : ''}`));
-    const paragraphs = person.relationship === 'Faculty' && biographies.has(normalize(person.name))
+    const hasBiography = person.relationship === 'Faculty' && biographies.has(normalize(person.name));
+    const fromInspire = !hasBiography && Boolean(person.description);
+    const paragraphs = hasBiography
       ? biographies.get(normalize(person.name))
       : [person.description || person.motivation];
     paragraphs.forEach((paragraph) => body.append(make('p', 'intro-profile__description', paragraph)));
+    if (fromInspire) body.append(inspireCitation());
+    window.markLabMentions?.(body);
     if (person.nobelUrl) body.append(sourceLink(person));
     dialog.showModal();
   }
@@ -196,6 +210,7 @@
         button.dataset.personId = person.id;
         button.dataset.relationship = person.relationship;
         button.dataset.gender = person.gender;
+        button.dataset.year = person.year;
         button.style.setProperty('--category-color', colors[person.category]);
         button.setAttribute('aria-label', `${person.name}, ${person.year}, ${person.category}. Open profile`);
         const image = make('img');

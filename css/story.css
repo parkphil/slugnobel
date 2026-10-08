@@ -152,3 +152,45 @@ h1 {
     min-height: 320svh;
   }
 }
+/* Highlight on each mention of Lawrence Berkeley National Lab / the Rad Lab, with a hover note. */
+.lab-mention {
+  position: relative;
+  padding: .05em .35em;
+  border-radius: .4em;
+  background: #176994;
+  color: #fff;
+  cursor: help;
+  pointer-events: auto;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.lab-mention:focus { outline: none; }
+.lab-mention:focus-visible { outline: 2px solid #176994; outline-offset: 2px; }
+.lab-mention::after {
+  content: attr(data-info);
+  position: absolute;
+  z-index: 30;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: min(260px, 80vw);
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 6px 24px #00000024;
+  color: #222;
+  font: 400 13px/1.45 var(--graphic-font);
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 4px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s;
+  pointer-events: none;
+}
+.lab-mention:hover::after,
+.lab-mention:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}

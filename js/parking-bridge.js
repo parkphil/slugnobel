@@ -12,6 +12,10 @@
   const decadeChart = intro.querySelector('.decade-chart');
   const fieldStage = intro.querySelector('[data-decade-step="fields"]');
   const totalStage = intro.querySelector('[data-decade-step="totals"]');
+  const econMedStage = intro.querySelector('[data-decade-step="economics-medicine"]');
+  // Economics prizes from the 2000s and physiology or medicine prizes from 2000 on.
+  const isRecentEconMed = (source) => (source.category === 'Economics' && source.year >= 2000 && source.year < 2010)
+    || (source.category === 'Physiology or Medicine' && source.year >= 2000);
   const ageStage = intro.querySelector('[data-story-step="age"]');
   const ageChart = intro.querySelector('.age-chart');
   const yearStage = () => intro.querySelector('[data-timeline-step="year"]');
@@ -52,6 +56,7 @@
         size: rect.width,
         opacity: Number(getComputedStyle(portrait).opacity),
         category: portrait.dataset.category,
+        year: Number(portrait.dataset.year),
         index,
       });
       const clone = document.createElement('div');
@@ -116,6 +121,7 @@
     const dotSize = mobile ? 14 : 16;
     const canvasRect = canvas.getBoundingClientRect();
     const fieldPhase = fieldStage ? ease(clamp((innerHeight * .88 - fieldStage.getBoundingClientRect().top) / (innerHeight * 1.08))) : 0;
+    const econMedPhase = econMedStage ? ease(clamp((innerHeight * .6 - econMedStage.getBoundingClientRect().top) / (innerHeight * .6))) : 0;
     const totalPhase = totalStage ? ease(clamp((innerHeight * .86 - totalStage.getBoundingClientRect().top) / (innerHeight * .95))) : 0;
     const agePhase = ageStage ? ease(clamp((innerHeight * .88 - ageStage.getBoundingClientRect().top) / (innerHeight * .95))) : 0;
     const yearPhase = yearStage() ? ease(clamp((innerHeight * .88 - yearStage().getBoundingClientRect().top) / (innerHeight * 1.08))) : 0;
@@ -311,7 +317,7 @@
         clone.style.width = `${decadeSize}px`;
         clone.style.height = `${decadeSize}px`;
         clone.style.transform = `translate3d(${decadeX - decadeSize / 2}px, ${decadeY - decadeSize / 2}px, 0)`;
-        clone.style.opacity = 1;
+        clone.style.opacity = isRecentEconMed(source) ? 1 : 1 - .85 * econMedPhase * (1 - totalPhase);
         clone.style.setProperty('--photo-opacity', 0);
         dot.style.opacity = 0;
         continue;

@@ -1,0 +1,77 @@
+/* Right-hand chapter index: a straight vertical track with one dot per chapter. */
+.story-index {
+  position: fixed;
+  z-index: 20;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s;
+  font-family: var(--graphic-font);
+}
+.story-index.is-visible { opacity: 1; visibility: visible; }
+.story-index ol {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.story-index__track,
+.story-index__fill {
+  position: absolute;
+  right: 4px;
+  width: 2px;
+  background: var(--rule);
+}
+.story-index__fill { z-index: 1; height: 0; background: var(--ink); }
+.story-index__link {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 22px;
+  margin: 4px 0;
+  padding: 0 22px 0 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 12px/22px var(--graphic-font);
+  text-align: right;
+  cursor: pointer;
+}
+.story-index__label {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity .2s ease, transform .2s ease;
+  white-space: nowrap;
+  background: var(--paper);
+  padding: 0 4px;
+  line-height: 18px;
+}
+.story-index__dot {
+  position: absolute;
+  z-index: 2;
+  top: 6px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #aaa;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: background .2s ease, border-color .2s ease;
+}
+.story-index:hover .story-index__label,
+.story-index__link:focus-visible .story-index__label,
+.story-index__link.is-active .story-index__label { opacity: 1; transform: none; }
+.story-index__link:hover,
+.story-index__link.is-active { color: var(--ink); }
+.story-index__link.is-past .story-index__dot { border-color: var(--ink); }
+.story-index__link.is-active .story-index__dot { background: var(--ink); border-color: var(--ink); }
+.story-index__link:focus-visible { outline: none; }
+.story-index__link:focus-visible .story-index__dot { outline: 1px solid var(--ink); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .story-index { right: 8px; }
+  .story-index__label { display: none; }
+  .story-index__link { width: 10px; padding: 0; }
+}
