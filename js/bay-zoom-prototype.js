@@ -72,7 +72,7 @@
       const tilt=1-.14*sprout;
       geography.attr('transform',`translate(600,320) scale(${scale},${scale*tilt}) translate(${-cx},${-cy})`);
       const screen=coordinate=>{const [x,y]=projection(coordinate);return [600+(x-cx)*scale,320+(y-cy)*scale*tilt];};
-      heading.text(local<.6?'Affiliation at the time of the award':views[segment].name).raise();
+      heading.text(local<.6?'Non-Berkeley Affiliation at the time of the award':views[segment].name).raise();
       detail.text(`${segment+1} / 3 · Column height: laureates affiliated at the time of the award`).raise();note.raise();
       const km=[100,5,10][segment],center=views[segment].center;
       const p1=projection(center),p2=projection([center[0]+km/(111.32*Math.cos(center[1]*Math.PI/180)),center[1]]);

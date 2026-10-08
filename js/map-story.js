@@ -6,8 +6,8 @@
   const cities={Ashburn:[-77.49,39.04],Baltimore:[-76.61,39.29],Berkeley:[-122.27,37.87],Boston:[-71.06,42.36],Boulder:[-105.27,40.02],Cambridge:[-71.11,42.37],'College Park':[-76.94,38.99],Garching:[11.65,48.25],Greenbelt:[-76.88,39],Houston:[-95.37,29.76],Leipzig:[12.37,51.34],'Los Angeles':[-118.24,34.05],'New Brunswick':[-74.45,40.49],'New Haven':[-72.93,41.31],'New York':[-74.01,40.71],Okinawa:[127.8,26.5],Pasadena:[-118.14,34.15],Philadelphia:[-75.17,39.95],Princeton:[-74.66,40.35],'San Francisco':[-122.42,37.77],'Santa Barbara':[-119.7,34.42],Seattle:[-122.33,47.61],'St. Louis':[-90.2,38.63],Stanford:[-122.17,37.43],'Walnut Creek':[-122.07,37.91]};
   const scenes=[];
   const hoverTip=document.createElement('aside');hoverTip.className='map-story__hover';hoverTip.hidden=true;document.body.append(hoverTip);
-  function explain(event,title,detail){hoverTip.replaceChildren();const name=document.createElement('strong');name.textContent=title;const body=document.createElement('span');body.textContent=detail;hoverTip.append(name,body);window.markLabMentions?.(hoverTip);hoverTip.hidden=false;hoverTip.style.left=`${Math.max(12,Math.min(event.clientX+16,innerWidth-330))}px`;hoverTip.style.top=`${Math.max(12,Math.min(event.clientY+16,innerHeight-hoverTip.offsetHeight-12))}px`;}
-  function hover(selection,title,detail){selection.attr('tabindex',0).on('pointerenter',function(event,d){d3.select(this).classed('is-hovered',true);explain(event,typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('pointermove',function(event,d){explain(event,typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('pointerleave',function(){d3.select(this).classed('is-hovered',false);hoverTip.hidden=true;}).on('focus',function(event,d){const r=this.getBoundingClientRect();explain({clientX:r.left,clientY:r.top},typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('blur',()=>{hoverTip.hidden=true;});}
+  function explain(event,title,detail,list=[]){hoverTip.replaceChildren();const name=document.createElement('strong');name.textContent=title;const body=document.createElement('span');body.textContent=detail;hoverTip.append(name,body);if(list.length){const names=document.createElement('ul');names.className='map-story__hover-list';list.forEach(text=>{const row=document.createElement('li');row.textContent=text;names.append(row);});hoverTip.append(names);}window.markLabMentions?.(hoverTip);hoverTip.hidden=false;hoverTip.style.left=`${Math.max(12,Math.min(event.clientX+16,innerWidth-330))}px`;hoverTip.style.top=`${Math.max(12,Math.min(event.clientY+16,innerHeight-hoverTip.offsetHeight-12))}px`;}
+  function hover(selection,title,detail){selection.on('pointerenter',function(event,d){d3.select(this).classed('is-hovered',true);explain(event,typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('pointermove',function(event,d){explain(event,typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('pointerleave',function(){d3.select(this).classed('is-hovered',false);hoverTip.hidden=true;}).on('focus',function(event,d){const r=this.getBoundingClientRect();explain({clientX:r.left,clientY:r.top},typeof title==='function'?title(d):title,typeof detail==='function'?detail(d):detail);}).on('blur',()=>{hoverTip.hidden=true;});}
   addEventListener('scroll',()=>{hoverTip.hidden=true;figure.querySelectorAll('.is-hovered,.is-linked').forEach(node=>node.classList.remove('is-hovered','is-linked'));},{passive:true});
   const clamp=t=>Math.max(0,Math.min(1,t)),ease=t=>t*t*(3-2*t),mix=(a,b,t)=>a+(b-a)*t;
   const places = {
@@ -43,14 +43,14 @@
       if(!mobile){const columns=Math.min(10,members.length),rows=Math.ceil(members.length/10),right=x+(columns-1)*17+8,bottom=y+18+(rows-1)*17+8;const endX=Math.max(x-8,Math.min(right,ax)),endY=Math.max(y+10,Math.min(bottom,ay));connectors.append('path').attr('class','map-story__connector').attr('pathLength',1).attr('d',`M${ax},${ay} L${endX},${endY}`);}
       const label=labels.append('text').attr('class','map-story__label').attr('x',x).attr('y',y);
       label.append('tspan').text(place[1]); label.append('tspan').attr('class','map-story__count').attr('dx',8).text(members.length);
-      members.forEach((person,i)=>dots.append('circle').attr('class','map-story__dot').attr('data-person-id',person.id).attr('cx',x+(i%(mobile?20:10))*17).attr('cy',y+18+Math.floor(i/(mobile?20:10))*17).attr('r',8).attr('fill',colors[person.category]).attr('tabindex',-1).attr('role','button').attr('aria-label',`${person.name}, born in ${person.birthCountry}. Open profile`).on('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();dispatchEvent(new CustomEvent('open-laureate-profile',{detail:{id:person.id}}));}}));
+      members.forEach((person,i)=>dots.append('circle').attr('class','map-story__dot').attr('data-person-id',person.id).attr('cx',x+(i%(mobile?20:10))*17).attr('cy',y+18+Math.floor(i/(mobile?20:10))*17).attr('r',8).attr('fill',colors[person.category]).attr('role','img').attr('aria-label',`${person.name}, born in ${person.birthCountry}`));
     });
     const items=[...svg.node().querySelectorAll('.map-story__dot')].map(dot=>({dot,person:people.find(p=>p.id===dot.dataset.personId),birth:[+dot.getAttribute('cx'),+dot.getAttribute('cy')]}));
     items.slice().forEach(item=>{
       const affiliations=item.person.awardAffiliations.filter(a=>cities[a.city]);
       const unique=[...new Map(affiliations.map(a=>[a.city,a])).values()];
       const first=item.person.awardAffiliations.some(a=>a.name.startsWith('University of California, Berkeley,'))?'Berkeley':unique[0]?.city;
-      unique.filter(a=>a.city!==first).forEach(a=>{const dot=item.dot.cloneNode(true);dot.addEventListener('keydown',event=>{if(['Enter',' '].includes(event.key)){event.preventDefault();dispatchEvent(new CustomEvent('open-laureate-profile',{detail:{id:item.person.id}}));}});dots.node().append(dot);items.push({...item,dot,forcedCoordinate:cities[a.city],extra:true});});
+      unique.filter(a=>a.city!==first).forEach(a=>{const dot=item.dot.cloneNode(true);dots.node().append(dot);items.push({...item,dot,forcedCoordinate:cities[a.city],extra:true});});
     });
     const slots={};
     items.forEach(item=>{const a=item.person.awardAffiliations.find(a=>cities[a.city]);item.coordinate=item.forcedCoordinate||(a?cities[a.city]:null);item.berkeley=!item.extra&&item.person.awardAffiliations.some(a=>a.name.startsWith('University of California, Berkeley,'));if(item.berkeley)item.coordinate=cities.Berkeley;const key=item.coordinate?.join(',')||'unlocated';item.slot=slots[key]||0;slots[key]=item.slot+1;});
@@ -78,7 +78,7 @@
     hover(geography.selectAll('.map-story__country'),country=>country.properties.name,country=>{const code=Object.entries(places).find(([,p])=>p[0]===String(country.id))?.[0];const count=people.filter(p=>p.birthCountryCode===code).length;return `${count} laureates born here in this dataset`;});
     hover(geography.selectAll('.map-story__coast,.map-story__borders'),'Map boundary','Geographic reference');
     hover(connectors.selectAll('path'),'Birthplace country','This line connects the country to its laureate dots.');
-    institutions.forEach(i=>{hover(i.group,i.name,`${i.ids.size} laureate${i.ids.size===1?'':'s'} affiliated at the time of the award`);i.group.on('pointerenter pointermove focus',event=>{institutionLabels.selectAll('.is-hovered').classed('is-hovered',false);i.group.classed('is-hovered',true);items.forEach(item=>item.dot.classList.toggle('is-linked',item.affiliationNames.includes(i.name)));const box=i.label.node().getBoundingClientRect();explain(event.type==='focus'?{clientX:box.right,clientY:box.top}:event,i.name,`${i.ids.size} laureate${i.ids.size===1?'':'s'} · ${i.city}`);}).on('pointerleave blur',()=>{i.group.classed('is-hovered',false);items.forEach(item=>item.dot.classList.remove('is-linked'));hoverTip.hidden=true;});});
+    institutions.forEach(i=>{hover(i.group,i.name,`${i.ids.size} laureate${i.ids.size===1?'':'s'} affiliated at the time of the award`);i.group.on('pointerenter pointermove focus',event=>{institutionLabels.selectAll('.is-hovered').classed('is-hovered',false);i.group.classed('is-hovered',true);items.forEach(item=>item.dot.classList.toggle('is-linked',item.affiliationNames.includes(i.name)));const box=i.label.node().getBoundingClientRect();explain(event.type==='focus'?{clientX:box.right,clientY:box.top}:event,i.name,`${i.ids.size} laureate${i.ids.size===1?'':'s'} · ${i.city}`,people.filter(p=>i.ids.has(p.id)).sort((a,b)=>a.year-b.year||a.name.localeCompare(b.name)).map(p=>`${p.name} (${p.year})`));}).on('pointerleave blur',()=>{i.group.classed('is-hovered',false);items.forEach(item=>item.dot.classList.remove('is-linked'));hoverTip.hidden=true;});});
     scenes.push({svg,heading,countries,projection,geography,localLand,stateBorders,items,labels,connectors,info,campusLabel,mobile,institutionLabels,institutions,layouts:new Map()});
   }
   window.updateMapStory=(mapPhase=1)=>{
@@ -111,7 +111,8 @@
       const activeStage=regionalStages.filter(stage=>stage.phase>0).at(-1);
       institutionLabels.attr('opacity',activeStage?ease(clamp((activeStage.phase-.7)/.3))*(1-zoom):0);
       institutionLabels.style('pointer-events',activeStage&&activeStage.phase>.9&&zoom<.1?'auto':'none');
-      const active=institutions.filter(i=>region==='Asia'?i.countryCode==='JP':region==='Europe'?i.countryCode==='DE':us?i.countryCode==='US'&&(region.startsWith('Eastern')?i.coordinate[0]>-95:i.coordinate[0]<=-95):false);
+      // Berkeley institutions are left out of the regional views; the Berkeley zoom step covers them.
+      const active=institutions.filter(i=>i.city!=='Berkeley').filter(i=>region==='Asia'?i.countryCode==='JP':region==='Europe'?i.countryCode==='DE':us?i.countryCode==='US'&&(region.startsWith('Eastern')?i.coordinate[0]>-95:i.coordinate[0]<=-95):false);
       institutions.forEach(i=>i.group.attr('display',active.includes(i)?null:'none'));
       [false,true].forEach(east=>{
         const divider=us?(region.startsWith('Eastern')?-80:-119):12;
@@ -171,7 +172,8 @@
         const regionalSize=mix(4,5.5,zoom>0?1:activeStage?.phase??0);
         item.dot.setAttribute('r',mix(8,regionalSize,affiliation));
         item.dot.dataset.mapOpacity=item.coordinate?(item.extra?ease(clamp((affiliation-.75)/.25)):1):1-affiliation;
-        item.dot.dataset.mapVisible=String((!item.extra||affiliation>.01)&&(zoom<.2||item.berkeley));
+        const hiddenAtBerkeley=region.startsWith('Western')&&zoom<.2&&item.coordinate?.join(',')===cities.Berkeley.join(',');
+        item.dot.dataset.mapVisible=String((!item.extra||affiliation>.01)&&(zoom<.2||item.berkeley)&&!hiddenAtBerkeley);
       });
       institutions.forEach(institution=>{
         const members=items.filter(item=>item.affiliationNames.includes(institution.name));

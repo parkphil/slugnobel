@@ -13,6 +13,27 @@
   const fieldStage = intro.querySelector('[data-decade-step="fields"]');
   const totalStage = intro.querySelector('[data-decade-step="totals"]');
   const econMedStage = intro.querySelector('[data-decade-step="economics-medicine"]');
+  // Share-of-prize steps are added by year-timeline.js after the decade-by-field steps.
+  const portionStage = () => intro.querySelector('[data-timeline-step="portion"]');
+  const paaboStage = () => intro.querySelector('[data-timeline-step="portion-paabo"]');
+  const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
+  // Fills `amount` of the way from a solid dot to a pie slice showing the share of the prize.
+  function setPie(clone, share, amount) {
+    if (amount <= .001) {
+      if (clone.dataset.pie) {
+        clone.style.background = '';
+        clone.style.boxShadow = '';
+        clone.style.backgroundColor = clone.dataset.color;
+        delete clone.dataset.pie;
+      }
+      return;
+    }
+    const [r, g, b] = clone.dataset.color.match(/\d+/g);
+    const angle = 360 - (360 - share * 360) * amount;
+    clone.style.background = `conic-gradient(rgb(${r} ${g} ${b}) 0deg ${angle}deg, rgb(${r} ${g} ${b} / ${1 - .8 * amount}) ${angle}deg 360deg)`;
+    clone.style.boxShadow = `inset 0 0 0 1.5px rgb(${r} ${g} ${b} / ${amount})`;
+    clone.dataset.pie = 'true';
+  }
   // Economics prizes from the 2000s and physiology or medicine prizes from 2000 on.
   const isRecentEconMed = (source) => (source.category === 'Economics' && source.year >= 2000 && source.year < 2010)
     || (source.category === 'Physiology or Medicine' && source.year >= 2000);
@@ -63,6 +84,7 @@
       clone.className = 'parking-bridge__item';
       clone.dataset.personId = id;
       clone.style.backgroundColor = getComputedStyle(portrait).backgroundColor;
+      clone.dataset.color = clone.style.backgroundColor;
       const photo = document.createElement('img');
       photo.src = portrait.querySelector('img').src;
       photo.alt = '';
@@ -96,7 +118,8 @@
       if (facultyChart) facultyChart.style.opacity = 0;
       if (mapChart) mapChart.style.opacity = 0;
       if (facultyChart) facultyChart.dataset.orbitReady = 'false';
-      intro.querySelectorAll('.year-story__dot, .age-chart__person, .faculty-story__mark, .map-story__dot').forEach((dot) => {
+      intro.querySelectorAll('.map-story__dot').forEach((dot) => { dot.style.pointerEvents = 'none'; });
+      intro.querySelectorAll('.year-story__dot, .age-chart__person, .faculty-story__mark').forEach((dot) => {
         dot.style.pointerEvents = 'none';
         dot.setAttribute('tabindex', '-1');
       });
@@ -122,6 +145,11 @@
     const canvasRect = canvas.getBoundingClientRect();
     const fieldPhase = fieldStage ? ease(clamp((innerHeight * .88 - fieldStage.getBoundingClientRect().top) / (innerHeight * 1.08))) : 0;
     const econMedPhase = econMedStage ? ease(clamp((innerHeight * .6 - econMedStage.getBoundingClientRect().top) / (innerHeight * .6))) : 0;
+    const stagePhase = (stage, start, length) => stage ? ease(clamp((innerHeight * start - stage.getBoundingClientRect().top) / (innerHeight * length))) : 0;
+    const portionPhase = stagePhase(portionStage(), .88, 1);
+    // The pie fill waits until the dots have settled into their share columns.
+    const portionFill = stagePhase(portionStage(), -.1, .4);
+    const paaboPhase = stagePhase(paaboStage(), .88, 1);
     const totalPhase = totalStage ? ease(clamp((innerHeight * .86 - totalStage.getBoundingClientRect().top) / (innerHeight * .95))) : 0;
     const agePhase = ageStage ? ease(clamp((innerHeight * .88 - ageStage.getBoundingClientRect().top) / (innerHeight * .95))) : 0;
     const yearPhase = yearStage() ? ease(clamp((innerHeight * .88 - yearStage().getBoundingClientRect().top) / (innerHeight * 1.08))) : 0;
@@ -146,7 +174,7 @@
     if (decadeChart) {
       decadeChart.style.opacity = yearPhase * (1 - ease(clamp(mapPhase / .2))) * (1 - facultyPhase);
       decadeChart.querySelectorAll('.decade-chart__heading, .decade-chart__count').forEach((label) => {
-        label.style.opacity = (label.classList.contains('decade-chart__count') ? totalPhase : fieldPhase) * (1 - ease(clamp(agePhase / .38)));
+        label.style.opacity = (label.classList.contains('decade-chart__count') ? totalPhase : fieldPhase * (1 - portionFill * (1 - totalPhase))) * (1 - ease(clamp(agePhase / .38)));
       });
       decadeChart.querySelectorAll('.decade-chart__axis').forEach((line) => {
         line.style.strokeDashoffset = 1 - yearPhase;
@@ -176,6 +204,7 @@
       target.setAttribute('tabindex', ageInteractive ? '0' : '-1');
     });
     const yearTargets = new Map([...(yearChart?.querySelectorAll(`.year-story__svg--${layout} .year-story__dot`) || [])].map((target) => [target.dataset.personId, target]));
+    const portionTargets = new Map([...(yearChart?.querySelectorAll(`.year-story__svg--${layout} .year-story__portion-target`) || [])].map((target) => [target.dataset.personId, target]));
     const facultyTargets = new Map([...(facultyChart?.querySelectorAll(`.faculty-story__svg--${layout} .faculty-story__mark`) || [])].map((target) => [target.dataset.personId, target]));
     window.updateMapStory?.(mapPhase);
     const mapTargets = new Map([...(mapChart?.querySelectorAll(`.map-story__svg--${layout} .map-story__dot`) || [])].map((target) => [target.dataset.personId, target]));
@@ -195,16 +224,19 @@
         const visible=interactive&&dot.dataset.mapVisible!=='false'&&Number(dot.dataset.mapOpacity??1)>.01;
         dot.style.opacity=visible?Number(dot.dataset.mapOpacity??1):0;
         dot.style.pointerEvents=visible?'all':'none';
-        dot.setAttribute('tabindex',visible?'0':'-1');
       });
     }
     if (yearChart) {
-      yearChart.style.opacity = yearPhase * (1 - fieldPhase);
+      const portionLabels = portionFill * (1 - totalPhase);
+      yearChart.style.opacity = Math.max(yearPhase * (1 - fieldPhase), portionLabels);
+      yearChart.querySelectorAll('.year-story__heading--year').forEach((el) => el.setAttribute('opacity', 1 - fieldPhase));
+      yearChart.querySelectorAll('.year-story__heading--portion, .year-story__portion-legend').forEach((el) => el.setAttribute('opacity', portionLabels));
+      yearChart.querySelectorAll('.year-story__callout').forEach((el) => el.setAttribute('opacity', paaboPhase * (1 - totalPhase)));
       yearChart.style.pointerEvents = yearPhase > .98 && fieldPhase < .05 ? 'auto' : 'none';
       const yearArrival = ease(clamp((yearPhase - .78) / .22));
       const yearInteractive = yearPhase > .999 && fieldPhase < .01;
       yearTargets.forEach((dot) => {
-        dot.style.opacity = yearArrival;
+        dot.style.opacity = yearArrival * (1 - fieldPhase);
         dot.style.pointerEvents = yearInteractive ? 'all' : 'none';
         dot.setAttribute('tabindex', yearInteractive ? '0' : '-1');
       });
@@ -252,6 +284,8 @@
       const centerY = mix(mix(source.y, queueY, gathering) + wanderY, target.y + target.height / 2, fill) - Math.sin(fill * Math.PI) * 12;
       const size = mix(mix(source.size, dotSize, shrinking), target.width, fill);
       const clone = clones.get(id);
+      const portionTarget = portionTargets.get(id);
+      setPie(clone, 1, 0);
       clone.style.pointerEvents = fieldPhase > .999 && agePhase < .01 ? 'auto' : 'none';
       dot.style.pointerEvents = fill >= .999 && yearPhase < .01 ? 'all' : 'none';
       if (facultyPhase > 0 && ageTargets.has(id)) {
@@ -311,13 +345,23 @@
         const fieldY = fieldRect.y + fieldRect.height / 2;
         const totalX = totalRect.x + totalRect.width / 2;
         const totalY = totalRect.y + totalRect.height / 2;
-        const decadeX = mix(mix(yearRect.x + yearRect.width / 2, fieldX, fieldPhase), totalX, totalPhase);
-        const decadeY = mix(mix(yearRect.y + yearRect.height / 2, fieldY, fieldPhase), totalY, totalPhase);
+        let byFieldX = mix(yearRect.x + yearRect.width / 2, fieldX, fieldPhase);
+        let byFieldY = mix(yearRect.y + yearRect.height / 2, fieldY, fieldPhase);
+        if (portionTarget) {
+          const portionRect = portionTarget.getBoundingClientRect();
+          byFieldX = mix(byFieldX, portionRect.x + portionRect.width / 2, portionPhase);
+          byFieldY = mix(byFieldY, portionRect.y + portionRect.height / 2, portionPhase);
+        }
+        const decadeX = mix(byFieldX, totalX, totalPhase);
+        const decadeY = mix(byFieldY, totalY, totalPhase);
         const decadeSize = mix(yearRect.width, mix(fieldRect.width, totalRect.width, totalPhase), fieldPhase);
         clone.style.width = `${decadeSize}px`;
         clone.style.height = `${decadeSize}px`;
         clone.style.transform = `translate3d(${decadeX - decadeSize / 2}px, ${decadeY - decadeSize / 2}px, 0)`;
-        clone.style.opacity = isRecentEconMed(source) ? 1 : 1 - .85 * econMedPhase * (1 - totalPhase);
+        const econMedDim = isRecentEconMed(source) ? 0 : econMedPhase * (1 - portionPhase);
+        const paaboDim = portionTarget?.dataset.highlight === 'paabo' ? 0 : paaboPhase;
+        clone.style.opacity = 1 - .85 * Math.max(econMedDim, paaboDim) * (1 - totalPhase);
+        setPie(clone, portionShare[portionTarget?.dataset.portion] ?? 1, portionFill * (1 - totalPhase));
         clone.style.setProperty('--photo-opacity', 0);
         dot.style.opacity = 0;
         continue;

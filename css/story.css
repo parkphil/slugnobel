@@ -31,7 +31,7 @@ body {
   color: var(--ink);
 }
 .article-header {
-  padding: 85px 30px 30px;
+  padding: 85px 15px 15px;
   background: #f5f5f5;
   text-align: center;
   color: rgba(0, 0, 0, .8);
@@ -43,11 +43,11 @@ body {
 }
 .article-header__subtitle {
   max-width: 640px;
-  margin: 0 auto 26.1px;
+  margin: 0 auto 10px;
   font: 300 24px/normal -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 @media (max-width: 600px) {
-  .article-header { padding: 65px 24px 30px; }
+  .article-header { padding: 65px 24px 15px; }
   .article-header h1, .article-header__subtitle { max-width: 350px; }
 }
 .prose {
@@ -152,7 +152,7 @@ h1 {
     min-height: 320svh;
   }
 }
-/* Highlight on each mention of Lawrence Berkeley National Lab / the Rad Lab, with a hover note. */
+/* Highlight on each mention of Lawrence Berkeley National Lab / the Rad Lab, with a hover note below it. */
 .lab-mention {
   position: relative;
   padding: .05em .35em;
@@ -171,7 +171,7 @@ h1 {
   position: absolute;
   z-index: 30;
   left: 50%;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
   width: max-content;
   max-width: min(260px, 80vw);
   padding: 9px 12px;
@@ -184,7 +184,7 @@ h1 {
   white-space: normal;
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, 4px);
+  transform: translate(-50%, -4px);
   transition: opacity .15s ease, transform .15s ease, visibility .15s;
   pointer-events: none;
 }

@@ -2,7 +2,7 @@
    (Radiation Lab, Rad Lab, Lawrence Radiation Laboratory). */
 (() => {
   const info =
-    "Founded by Ernest Lawrence in 1931 as the Radiation Laboratory, or “Rad Lab.” Renamed for Lawrence in 1958, it is now Lawrence Berkeley National Laboratory, a U.S. Department of Energy lab managed by UC.";
+        "Founded by Ernest Lawrence in 1931 as the Radiation Laboratory, or “Rad Lab.” The lab was named after Lawrence in 1959, and, in 1995, finally renamed to its current title, Lawrence Berkeley National Laboratory, a U.S. Department of Energy lab managed by University of California.";
   const pattern = /Lawrence Berkeley National Lab(?:oratory)?|Lawrence Radiation Laboratory|Radiation Lab(?:oratory)?|Rad Lab|Berkeley Lab/g;
 
   function markLabMentions(root) {

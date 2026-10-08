@@ -9,6 +9,15 @@
     Physics: '#4b9ccf', Chemistry: '#f28147', Economics: '#8e689b',
     'Physiology or Medicine': '#30b189', Literature: '#b8607e',
   };
+  // Share of the prize, drawn as how much of each dot is filled in.
+  const portions = ['1', '1/2', '1/3', '1/4'];
+  const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
+  const wedge = (cx, cy, r, share) => {
+    if (share >= 1) return `M${cx - r} ${cy}A${r} ${r} 0 1 1 ${cx + r} ${cy}A${r} ${r} 0 1 1 ${cx - r} ${cy}Z`;
+    const angle = -Math.PI / 2 + share * 2 * Math.PI;
+    return `M${cx} ${cy}L${cx} ${cy - r}A${r} ${r} 0 ${share > .5 ? 1 : 0} 1 ${cx + r * Math.cos(angle)} ${cy + r * Math.sin(angle)}Z`;
+  };
+  const portionLabels = { '1': 'Full prize', '1/2': 'Half', '1/3': 'One-third', '1/4': 'One-quarter' };
   const node = (tag, attrs = {}, value) => {
     const el = document.createElementNS(ns, tag);
     Object.entries(attrs).forEach(([key, val]) => el.setAttribute(key, val));
@@ -39,7 +48,17 @@
       viewBox: mobile ? '0 0 500 770' : '0 0 1200 520',
       role: 'img', 'aria-label': 'Berkeley Nobel laureates by year, one dot per person',
     });
-    svg.append(node('text', { class: 'year-story__heading', x: mobile ? 20 : 74, y: mobile ? 25 : 38 }, 'Year of award'));
+    svg.append(node('text', { class: 'year-story__heading year-story__heading--year', x: mobile ? 20 : 74, y: mobile ? 25 : 38 }, 'Year of award'));
+    svg.append(node('text', { class: 'year-story__heading year-story__heading--portion', x: mobile ? 20 : 74, y: mobile ? 25 : 38, opacity: 0 }, 'Share of the prize by decade'));
+    const legend = node('g', { class: 'year-story__portion-legend', opacity: 0 });
+    portions.forEach((portion, index) => {
+      const x = (mobile ? 28 : 82) + index * (mobile ? 118 : 130);
+      const y = mobile ? 50 : 66;
+      legend.append(node('circle', { class: 'year-story__legend-ring', cx: x, cy: y - 4, r: 6 }));
+      legend.append(node('path', { class: 'year-story__legend-fill', d: wedge(x, y - 4, 6, portionShare[portion]) }));
+      legend.append(node('text', { class: 'year-story__legend-label', x: x + 11, y }, portionLabels[portion]));
+    });
+    svg.append(legend);
     // Desktop stacks dots in two-year columns (22px apart, wider than a dot) so stacks stay
     // vertical and neighbors never overlap; each column sits at the middle of its two years.
     const categoryOrder = Object.keys(colors);
@@ -58,6 +77,25 @@
       interactive(dot, person);
       svg.append(dot);
     });
+    // Portion view (after the decade-by-field steps): hidden targets for the moving dots in
+    // parking-bridge.js, one column (desktop) or row (mobile) per decade, full prizes first.
+    const byDecade = new Map();
+    people.slice()
+      .sort((a, b) => portions.indexOf(a.portion) - portions.indexOf(b.portion) || a.year - b.year || a.name.localeCompare(b.name))
+      .forEach((person) => {
+        const decade = Math.floor(person.year / 10) * 10;
+        const index = byDecade.get(decade) || 0;
+        byDecade.set(decade, index + 1);
+        const x = mobile ? 184 + index * 20 : 96 + (decade - 1930) / 10 * 112;
+        const y = mobile ? 80 + (decade - 1930) / 10 * 59 : 333 - index * 19;
+        svg.append(node('circle', { class: 'year-story__portion-target', cx: x, cy: y, r: 8, 'data-person-id': person.id, 'data-portion': person.portion, 'data-highlight': person.name === 'Svante Pääbo' ? 'paabo' : '' }));
+        if (person.name === 'Svante Pääbo') {
+          // Desktop: under the decade label; mobile: just below his dot.
+          const labelX = x;
+          const labelY = mobile ? y + 26 : 424;
+          svg.append(node('text', { class: 'year-story__callout', x: labelX, y: labelY, 'text-anchor': mobile ? 'start' : 'middle', opacity: 0 }, 'Svante Pääbo, 2022'));
+        }
+      });
     yearFigure.append(svg);
   }
   function renderFaculty(people, mobile) {
@@ -127,6 +165,14 @@
     requestAnimationFrame(animateOrbit);
   }
   requestAnimationFrame(animateOrbit);
+  const storyBox = (text) => {
+    const box = document.createElement('div');
+    box.className = 'intro-scrolly__box intro-scrolly__box--story';
+    const copy = document.createElement('p');
+    copy.textContent = text;
+    box.append(copy);
+    return box;
+  };
   fetch('data/laureates-full.json')
     .then((response) => { if (!response.ok) throw new Error('Laureate data could not load'); return response.json(); })
     .then((people) => {
@@ -144,6 +190,19 @@
       yearBox.append(yearCopy);
       yearStep.append(yearBox);
       steps.insertBefore(yearStep, firstDecade);
+      const portionStep = step('portion', 'Share of the prize by decade');
+      portionStep.append(storyBox('The Nobel Prize monetary award can be divided up to three individuals, either between co-researchers for a single discovery or split between two separate discoveries.'));
+      // Share-of-prize steps follow the decade-by-field steps, before the decade totals.
+      const decadeTotals = steps.querySelector('[data-decade-step="totals"]');
+      steps.insertBefore(portionStep, decadeTotals);
+      const paaboStep = step('portion-paabo', 'Svante Pääbo, the only full-prize winner since the 1980s');
+      const paaboBox = storyBox('');
+      const paaboCopy = paaboBox.querySelector('p');
+      const paaboName = document.createElement('strong');
+      paaboName.textContent = 'Svante Pääbo';
+      paaboCopy.append(paaboName, ', Berkeley Postdoctoral alum, has been the only individual since the 1980s who has won the entire Nobel Prize portion for his discoveries concerning the genomes of extinct hominins and human evolution in 2022.');
+      paaboStep.append(paaboBox);
+      steps.insertBefore(paaboStep, decadeTotals);
       steps.append(step('faculty', 'Faculty laureates'));
       dispatchEvent(new Event('year-timeline:ready'));
     })

@@ -122,7 +122,12 @@
     if (!person || dialog.open) return;
     tooltip.replaceChildren();
     const title = make('strong', 'laureate-tooltip__name', person.name);
-    const meta = make('span', 'laureate-tooltip__meta', `${person.year} · ${person.category}`);
+    // On the age chart, also show the laureate's age when they received the prize.
+    const age = target.classList.contains('age-chart__person') && person.ageAtAward ? ` · Age ${person.ageAtAward}` : '';
+    // While dots show their share of the prize (pie fill), also list the share.
+    const shares = { '1': 'Full prize', '1/2': '1/2 of the prize', '1/3': '1/3 of the prize', '1/4': '1/4 of the prize' };
+    const share = target.dataset.pie && shares[person.portion] ? ` · ${shares[person.portion]}` : '';
+    const meta = make('span', 'laureate-tooltip__meta', `${person.year} · ${person.category}${age}${share}`);
     const description = make('p', 'laureate-tooltip__description', preview(person));
     tooltip.append(title, meta, description);
     if(target.dataset.affiliations)tooltip.append(make('p','laureate-tooltip__meta',target.dataset.affiliations));
@@ -164,7 +169,8 @@
   document.addEventListener('focusout', () => { tooltip.hidden = true; });
   document.addEventListener('click', (event) => {
     const target = interactiveTarget(event.target);
-    if (!target || target.matches('.intro-portrait, .year-story__dot, .faculty-story__mark')) return;
+    // Map dots are hover-only, so they don't open profiles.
+    if (!target || target.matches('.intro-portrait, .year-story__dot, .faculty-story__mark, .map-story__dot')) return;
     const person = currentPeople.find((candidate) => candidate.id === target.dataset.personId);
     if (person) openProfile(person);
   });
