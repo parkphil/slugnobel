@@ -1,4 +1,4 @@
-"""Regenerate map-ready records from laureates-full.json without altering source data."""
+"""Regenerate map-ready records from laureates-full.json."""
 
 from collections import Counter
 from datetime import date

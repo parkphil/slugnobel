@@ -42,6 +42,5 @@
   .map-story__svg--desktop { display: none; }
   .map-story__svg--mobile { display: block; }
 }
-/* The map is hover-only: nothing in it takes focus, shows a focus box, or selects as text. */
 .map-story, .map-story * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 .map-story *:focus, .map-story *:focus-visible { outline: none; }

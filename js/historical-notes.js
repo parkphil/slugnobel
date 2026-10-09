@@ -1,4 +1,3 @@
-/* Shared inline historical notes, including dynamically opened profiles. */
 (() => {
   const info =
         "Founded by Ernest Lawrence in 1931 as the Radiation Laboratory, or “Rad Lab.” The lab was named after Lawrence in 1959, and, in 1995, finally renamed to its current title, Lawrence Berkeley National Laboratory, a U.S. Department of Energy lab managed by University of California.";
@@ -43,7 +42,6 @@
     });
   }
 
-  // Apply the same notes to article text, profile popups and map tooltips.
   function markHistoricalMentions(root) {
     notes.forEach((note) => markMentions(root, note));
   }

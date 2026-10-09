@@ -1,4 +1,3 @@
-/* Shared prize colors. Keep the article's established palette in one place. */
 window.nobelColors = Object.freeze({
   Physics: '#4b9ccf',
   Chemistry: '#f28147',

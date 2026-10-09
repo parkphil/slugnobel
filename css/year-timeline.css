@@ -26,7 +26,6 @@
 .intro-scrolly__step--year { min-height: 145svh; }
 .intro-scrolly__step--year .intro-scrolly__box { top: 70svh; }
 .intro-scrolly__step--year[data-timeline-step="faculty"] { min-height: 185svh; }
-/* Extra hold on the Pääbo caption before the dots move on to the decade-by-field chart. */
 .intro-scrolly__step--year[data-timeline-step="portion-paabo"] { min-height: 210svh; }
 @media (max-width: 700px) {
   .year-story, .faculty-story { top: 19svh; width: min(400px, calc(100vw - 24px)); aspect-ratio: 500 / 770; }

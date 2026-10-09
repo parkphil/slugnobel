@@ -22,7 +22,6 @@
 .parking-lot__stalls path { stroke: #919995; stroke-width: 3; stroke-linecap: round; }
 .parking-lot__dots { opacity: 0; }
 .parking-lot__dot { pointer-events: all; cursor: pointer; }
-/* The moving and parked portraits exchange visibility in the same frame. */
 .parking-lot__dot { transition: none; }
 .parking-lot__labels {
   position: absolute;

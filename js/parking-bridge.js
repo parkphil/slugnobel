@@ -13,11 +13,9 @@
   const fieldStage = intro.querySelector('[data-decade-step="fields"]');
   const totalStage = intro.querySelector('[data-decade-step="totals"]');
   const econMedStage = intro.querySelector('[data-decade-step="economics-medicine"]');
-  // Share-of-prize steps are added by year-timeline.js after the decade-by-field steps.
   const portionStage = () => intro.querySelector('[data-timeline-step="portion"]');
   const paaboStage = () => intro.querySelector('[data-timeline-step="portion-paabo"]');
   const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
-  // Fills `amount` of the way from a solid dot to a pie slice showing the share of the prize.
   function setPie(clone, share, amount) {
     if (amount <= .001) {
       if (clone.dataset.pie) {
@@ -34,7 +32,6 @@
     clone.style.boxShadow = `inset 0 0 0 1.5px rgb(${r} ${g} ${b} / ${amount})`;
     clone.dataset.pie = 'true';
   }
-  // Economics prizes from the 2000s and physiology or medicine prizes from 2000 on.
   const isRecentEconMed = (source) => (source.category === 'Economics' && source.year >= 2000 && source.year < 2010)
     || (source.category === 'Physiology or Medicine' && source.year >= 2000);
   const ageStage = intro.querySelector('[data-story-step="age"]');
@@ -147,7 +144,6 @@
     const econMedPhase = econMedStage ? ease(clamp((innerHeight * .6 - econMedStage.getBoundingClientRect().top) / (innerHeight * .6))) : 0;
     const stagePhase = (stage, start, length) => stage ? ease(clamp((innerHeight * start - stage.getBoundingClientRect().top) / (innerHeight * length))) : 0;
     const portionPhase = stagePhase(portionStage(), .88, 1);
-    // The pie fill waits until the dots have settled into their share columns.
     const portionFill = stagePhase(portionStage(), -.1, .4);
     const paaboPhase = stagePhase(paaboStage(), .88, 1);
     const totalPhase = totalStage ? ease(clamp((innerHeight * .86 - totalStage.getBoundingClientRect().top) / (innerHeight * .95))) : 0;
@@ -288,8 +284,7 @@
       setPie(clone, 1, 0);
       clone.style.pointerEvents = fieldPhase > .999 && agePhase < .01 ? 'auto' : 'none';
       const parked = fill >= .999 && yearPhase < .01;
-      // Animate shading once parked, but never fade in the destination during
-      // the frame that replaces a moving portrait (which caused the flash).
+      // Don't fade in the destination on the frame that replaces a moving portrait.
       dot.style.transition = parked && dot.dataset.wasParked === 'true'
         ? 'opacity .35s ease'
         : 'none';

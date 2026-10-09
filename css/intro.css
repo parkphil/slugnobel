@@ -1,4 +1,3 @@
-/* A still, editorial opening plate. The animated story will follow later. */
 [hidden] { display: none !important; }
 .intro-scrolly { position: relative; }
 .intro-visual {
@@ -14,7 +13,6 @@
 }
 .intro-visual__composition {
   position: absolute;
-  /* Centered in the space above the legend; width also capped by height so all rows fit. */
   top: calc(50% - 1svh);
   left: 50%;
   width: min(835px, calc(100vw - 48px), calc((100svh - 200px) * 1.7));
@@ -228,8 +226,6 @@
   }
 }
 
-/* Solid category-colored backgrounds */
-
 .intro-portrait {
   background: var(--category-color);
   overflow: hidden;
@@ -251,7 +247,6 @@
   filter: grayscale(1);
 }
 
-/* Profile spread: the portrait and article text occupy separate columns. */
 .intro-profile { width: min(1040px, calc(100vw - 48px)); padding: 52px 42px 42px; box-shadow: none; }
 .intro-profile__content { display: grid; grid-template-columns: minmax(220px, .85fr) minmax(0, 1.65fr); gap: 38px; align-items: start; }
 .intro-profile__head { display: block; padding: 0; }
@@ -271,7 +266,6 @@
  .intro-profile__description { font-size: 17px; }
 }
 
-/* Later narrative cards stay compact; long passages retain more reading width. */
 .intro-scrolly__box--story { width: min(550px, calc(100% - 40px)); padding: 20px 24px; }
 .intro-scrolly__box--story p { font-size: 18px; line-height: 1.42; }
 .intro-scrolly__box--parking { width: min(590px, calc(100% - 40px)); padding: 22px 26px; }

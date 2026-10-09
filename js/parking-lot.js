@@ -45,7 +45,6 @@
             photo.setAttribute('x', '.07'); photo.setAttribute('y', '.07');
             photo.setAttribute('width', '.86'); photo.setAttribute('height', '.86');
             photo.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-            // Match the moving portrait exactly at the handoff into its parking bay.
             photo.style.filter = 'grayscale(1)';
             pattern.append(background, photo); defs.append(pattern);
             dot.setAttribute('fill', `url(#${patternId})`);

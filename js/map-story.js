@@ -2,7 +2,6 @@
   const figure = document.querySelector('.map-story');
   if (!figure) return;
   const colors = window.nobelColors;
-  // City anchors match the resolved award-affiliation cities; they are not laboratory coordinates.
   const cities={Ashburn:[-77.49,39.04],Baltimore:[-76.61,39.29],Berkeley:[-122.27,37.87],Boston:[-71.06,42.36],Boulder:[-105.27,40.02],Cambridge:[-71.11,42.37],'College Park':[-76.94,38.99],Garching:[11.65,48.25],Greenbelt:[-76.88,39],Houston:[-95.37,29.76],Leipzig:[12.37,51.34],'Los Angeles':[-118.24,34.05],'New Brunswick':[-74.45,40.49],'New Haven':[-72.93,41.31],'New York':[-74.01,40.71],Okinawa:[127.8,26.5],Pasadena:[-118.14,34.15],Philadelphia:[-75.17,39.95],Princeton:[-74.66,40.35],'San Francisco':[-122.42,37.77],'Santa Barbara':[-119.7,34.42],Seattle:[-122.33,47.61],'St. Louis':[-90.2,38.63],Stanford:[-122.17,37.43],'Walnut Creek':[-122.07,37.91]};
   const scenes=[];
   const hoverTip=document.createElement('aside');hoverTip.className='map-story__hover';hoverTip.hidden=true;document.body.append(hoverTip);

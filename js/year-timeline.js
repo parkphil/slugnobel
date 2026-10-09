@@ -6,7 +6,6 @@
   if (!steps || !yearFigure || !facultyFigure) return;
   const ns = 'http://www.w3.org/2000/svg';
   const colors = window.nobelColors;
-  // Share of the prize, drawn as how much of each dot is filled in.
   const portions = ['1', '1/2', '1/3', '1/4'];
   const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
   const wedge = (cx, cy, r, share) => {
@@ -56,8 +55,6 @@
       legend.append(node('text', { class: 'year-story__legend-label', x: x + 11, y }, portionLabels[portion]));
     });
     svg.append(legend);
-    // Desktop stacks dots in two-year columns (22px apart, wider than a dot) so stacks stay
-    // vertical and neighbors never overlap; each column sits at the middle of its two years.
     const categoryOrder = Object.keys(colors);
     const ordered = people.slice().sort((a, b) => a.year - b.year
       || categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category) || a.name.localeCompare(b.name));
@@ -74,8 +71,6 @@
       interactive(dot, person);
       svg.append(dot);
     });
-    // Portion view (after the decade-by-field steps): hidden targets for the moving dots in
-    // parking-bridge.js, one column (desktop) or row (mobile) per decade, full prizes first.
     const byDecade = new Map();
     people.slice()
       .sort((a, b) => portions.indexOf(a.portion) - portions.indexOf(b.portion) || a.year - b.year || a.name.localeCompare(b.name))
@@ -87,7 +82,6 @@
         const y = mobile ? 80 + (decade - 1930) / 10 * 59 : 333 - index * 19;
         svg.append(node('circle', { class: 'year-story__portion-target', cx: x, cy: y, r: 8, 'data-person-id': person.id, 'data-portion': person.portion, 'data-highlight': person.name === 'Svante Pääbo' ? 'paabo' : '' }));
         if (person.name === 'Svante Pääbo') {
-          // Desktop: under the decade label; mobile: just below his dot.
           const labelX = x;
           const labelY = mobile ? y + 26 : 424;
           svg.append(node('text', { class: 'year-story__callout', x: labelX, y: labelY, 'text-anchor': mobile ? 'start' : 'middle', opacity: 0 }, 'Svante Pääbo, 2022'));
@@ -189,7 +183,6 @@
       steps.insertBefore(yearStep, firstDecade);
       const portionStep = step('portion', 'Share of the prize by decade');
       portionStep.append(storyBox('The Nobel Prize monetary award can be divided up to three individuals, either between co-researchers for a single discovery or split between two separate discoveries.'));
-      // Share-of-prize steps follow the decade-by-field steps, before the decade totals.
       const decadeTotals = steps.querySelector('[data-decade-step="totals"]');
       steps.insertBefore(portionStep, decadeTotals);
       const paaboStep = step('portion-paabo', 'Svante Pääbo, the only full-prize winner since the 1980s');
