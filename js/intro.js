@@ -16,9 +16,7 @@
   const normalize = (name) => name.normalize('NFKD').toLowerCase().replace(/[^a-z]/g, '');
   const emphasize = (category) => {
     grid.querySelectorAll('.intro-portrait').forEach((portrait) => {
-      // Steven Chu is listed as an alum but also joined the faculty after his prize.
-      const facultyToo = activeFocus === 'Faculty' && portrait.dataset.name === 'Steven Chu';
-      const relationshipMatch = activeFocus === 'all' || facultyToo || (activeFocus === 'Women' ? portrait.dataset.gender === 'female' : portrait.dataset.relationship === activeFocus);
+      const relationshipMatch = activeFocus === 'all' || (activeFocus === 'Women' ? portrait.dataset.gender === 'female' : portrait.dataset.relationship === activeFocus);
       const categoryMatch = !category || portrait.dataset.category === category;
       portrait.classList.toggle('is-dimmed', !(relationshipMatch && categoryMatch));
     });
