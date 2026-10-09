@@ -2,7 +2,7 @@
   const lot = document.querySelector('.parking-lot__canvas');
   if (!lot) return;
   const fields = [...lot.querySelectorAll('.parking-lot__field')];
-  const colors = ['#4b9ccf', '#f28147', '#8e689b', '#30b189', '#b8607e'];
+  const colors = window.nobelColors;
   const groups = [...lot.querySelectorAll('.parking-lot__dots')];
   const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -39,12 +39,14 @@
             pattern.setAttribute('width', '1'); pattern.setAttribute('height', '1');
             pattern.setAttribute('patternContentUnits', 'objectBoundingBox');
             const background = document.createElementNS(svgNS, 'rect');
-            background.setAttribute('width', '1'); background.setAttribute('height', '1'); background.setAttribute('fill', colors[index]);
+            background.setAttribute('width', '1'); background.setAttribute('height', '1'); background.setAttribute('fill', colors[field.dataset.category]);
             const photo = document.createElementNS(svgNS, 'image');
             photo.setAttribute('href', person.photo);
             photo.setAttribute('x', '.07'); photo.setAttribute('y', '.07');
             photo.setAttribute('width', '.86'); photo.setAttribute('height', '.86');
             photo.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+            // Match the moving portrait exactly at the handoff into its parking bay.
+            photo.style.filter = 'grayscale(1)';
             pattern.append(background, photo); defs.append(pattern);
             dot.setAttribute('fill', `url(#${patternId})`);
             dot.dataset.personId = person.id;

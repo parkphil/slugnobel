@@ -2,10 +2,7 @@
   const ageChart = document.querySelector('.age-chart');
   if (!ageChart) return;
   const svgNS = 'http://www.w3.org/2000/svg';
-  const colors = {
-    Physics: '#4b9ccf', Chemistry: '#f28147', Economics: '#8e689b',
-    'Physiology or Medicine': '#30b189', Literature: '#b8607e',
-  };
+  const colors = window.nobelColors;
   const make = (tag, attrs = {}, value) => {
     const node = document.createElementNS(svgNS, tag);
     for (const [key, data] of Object.entries(attrs)) node.setAttribute(key, data);

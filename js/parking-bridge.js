@@ -287,7 +287,14 @@
       const portionTarget = portionTargets.get(id);
       setPie(clone, 1, 0);
       clone.style.pointerEvents = fieldPhase > .999 && agePhase < .01 ? 'auto' : 'none';
-      dot.style.pointerEvents = fill >= .999 && yearPhase < .01 ? 'all' : 'none';
+      const parked = fill >= .999 && yearPhase < .01;
+      // Animate shading once parked, but never fade in the destination during
+      // the frame that replaces a moving portrait (which caused the flash).
+      dot.style.transition = parked && dot.dataset.wasParked === 'true'
+        ? 'opacity .35s ease'
+        : 'none';
+      dot.dataset.wasParked = String(parked);
+      dot.style.pointerEvents = parked ? 'all' : 'none';
       if (facultyPhase > 0 && ageTargets.has(id)) {
         const from = (mapTargets.get(id) || ageTargets.get(id)).getBoundingClientRect();
         const to = facultyTargets.get(id)?.getBoundingClientRect();

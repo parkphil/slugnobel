@@ -159,7 +159,7 @@ h1 {
   border-radius: .4em;
   background: #176994;
   color: #fff;
-  cursor: help;
+  cursor: default;
   pointer-events: auto;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

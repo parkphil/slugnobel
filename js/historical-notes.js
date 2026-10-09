@@ -43,11 +43,11 @@
     });
   }
 
-  // Keep the existing entry point so profile and map notes receive both treatments.
-  function markLabMentions(root) {
+  // Apply the same notes to article text, profile popups and map tooltips.
+  function markHistoricalMentions(root) {
     notes.forEach((note) => markMentions(root, note));
   }
 
-  window.markLabMentions = markLabMentions;
-  document.querySelectorAll("main .prose, .intro-scrolly__steps").forEach(markLabMentions);
+  window.markHistoricalMentions = markHistoricalMentions;
+  document.querySelectorAll("main .prose, .intro-scrolly__steps").forEach(markHistoricalMentions);
 })();

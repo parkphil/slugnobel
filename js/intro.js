@@ -5,13 +5,7 @@
   const dialog = document.getElementById('intro-profile');
   const content = dialog.querySelector('.intro-profile__content');
   const tooltip = document.getElementById('laureate-tooltip');
-  const colors = {
-    Physics: '#4b9ccf',
-    Chemistry: '#f28147',
-    Economics: '#8e689b',
-    'Physiology or Medicine': '#30b189',
-    Literature: '#b8607e',
-  };
+  const colors = window.nobelColors;
   const labels = {
     'Physiology or Medicine': 'Medicine',
   };
@@ -100,7 +94,7 @@
       : [person.description || person.motivation];
     paragraphs.forEach((paragraph) => body.append(make('p', 'intro-profile__description', paragraph)));
     if (fromInspire) body.append(inspireCitation());
-    window.markLabMentions?.(body);
+    window.markHistoricalMentions?.(body);
     if (person.nobelUrl) body.append(sourceLink(person));
     dialog.showModal();
   }

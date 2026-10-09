@@ -5,10 +5,7 @@
   const facultyFigure = intro?.querySelector('.faculty-story');
   if (!steps || !yearFigure || !facultyFigure) return;
   const ns = 'http://www.w3.org/2000/svg';
-  const colors = {
-    Physics: '#4b9ccf', Chemistry: '#f28147', Economics: '#8e689b',
-    'Physiology or Medicine': '#30b189', Literature: '#b8607e',
-  };
+  const colors = window.nobelColors;
   // Share of the prize, drawn as how much of each dot is filled in.
   const portions = ['1', '1/2', '1/3', '1/4'];
   const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
