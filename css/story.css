@@ -152,8 +152,8 @@ h1 {
     min-height: 320svh;
   }
 }
-/* Highlight on each mention of Lawrence Berkeley National Lab / the Rad Lab, with a hover note below it. */
-.lab-mention {
+/* Inline historical references with a shared hover-note treatment. */
+.lab-mention, .manhattan-mention {
   position: relative;
   padding: .05em .35em;
   border-radius: .4em;
@@ -164,9 +164,11 @@ h1 {
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
-.lab-mention:focus { outline: none; }
-.lab-mention:focus-visible { outline: 2px solid #176994; outline-offset: 2px; }
-.lab-mention::after {
+.manhattan-mention { background: #97543b; }
+.lab-mention:focus, .manhattan-mention:focus { outline: none; }
+.lab-mention:focus-visible, .manhattan-mention:focus-visible { outline: 2px solid #176994; outline-offset: 2px; }
+.manhattan-mention:focus-visible { outline-color: #97543b; }
+.lab-mention::after, .manhattan-mention::after {
   content: attr(data-info);
   position: absolute;
   z-index: 30;
@@ -189,7 +191,9 @@ h1 {
   pointer-events: none;
 }
 .lab-mention:hover::after,
-.lab-mention:focus-visible::after {
+.lab-mention:focus-visible::after,
+.manhattan-mention:hover::after,
+.manhattan-mention:focus-visible::after {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
