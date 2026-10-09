@@ -98,6 +98,15 @@
     svg.insertBefore(element('path', { class: 'decade-chart__trend', pathLength: 1, d: trendPath(trendPoints, mobile) }), svg.querySelector('.decade-chart__count'));
     svg.querySelectorAll('.decade-chart__axis').forEach((path) => path.setAttribute('pathLength', 1));
     svg.append(fieldTargets, totalTargets);
+    const paabo = people.find((person) => person.name === 'Svante Pääbo');
+    const target = paabo && totalTargets.querySelector(`[data-person-id="${paabo.id}"]`);
+    if (target) svg.append(element('text', {
+      class: 'decade-chart__label decade-chart__paabo',
+      x: mobile ? 184 : target.getAttribute('cx'),
+      y: mobile ? Number(target.getAttribute('cy')) + 27 : 428,
+      opacity: 0,
+    }, 'Svante Pääbo, 2022'));
+
   }
 
   fetch('data/laureates-full.json')

@@ -5,7 +5,7 @@
 
   const stages = [...intro.querySelectorAll('[data-parking-step]')];
   const morphStage = stages.find((stage) => stage.dataset.parkingStep === 'morph');
-  const categoryStages = stages.filter((stage) => !['context', 'morph'].includes(stage.dataset.parkingStep));
+  const categoryStages = stages.filter((stage) => !['context', 'peace', 'morph'].includes(stage.dataset.parkingStep));
   const fillStage=stages.find(stage=>stage.dataset.parkingStep==='fill');
   const labNames=new Set(['John Clarke','Carolyn Bertozzi','John Clauser','Jennifer Doudna','Saul Perlmutter','George Smoot','Steven Chu','Yuan T. Lee','Luis Alvarez','Melvin Calvin','Donald Glaser','Emilio Segrè','Owen Chamberlain','Edwin McMillan','Glenn Seaborg','Ernest Lawrence']);
   const manhattanNames=new Set(['Ernest Lawrence','Glenn Seaborg','Emilio Segrè','Owen Chamberlain','Luis Alvarez','Harold Urey','Willard Libby']);
@@ -14,7 +14,7 @@
   const totalStage = intro.querySelector('[data-decade-step="totals"]');
   const econMedStage = intro.querySelector('[data-decade-step="economics-medicine"]');
   const portionStage = () => intro.querySelector('[data-timeline-step="portion"]');
-  const paaboStage = () => intro.querySelector('[data-timeline-step="portion-paabo"]');
+  const paaboStage = () => intro.querySelector('[data-timeline-step="decade-paabo"]');
   const portionShare = { '1': 1, '1/2': 1 / 2, '1/3': 1 / 3, '1/4': 1 / 4 };
   function setPie(clone, share, amount) {
     if (amount <= .001) {
@@ -170,14 +170,14 @@
     if (decadeChart) {
       decadeChart.style.opacity = yearPhase * (1 - ease(clamp(mapPhase / .2))) * (1 - facultyPhase);
       decadeChart.querySelectorAll('.decade-chart__heading, .decade-chart__count').forEach((label) => {
-        label.style.opacity = (label.classList.contains('decade-chart__count') ? totalPhase : fieldPhase * (1 - portionFill * (1 - totalPhase))) * (1 - ease(clamp(agePhase / .38)));
+        label.style.opacity = (label.classList.contains('decade-chart__count') ? totalPhase : fieldPhase) * (1 - portionFill) * (1 - ease(clamp(agePhase / .38)));
       });
       decadeChart.querySelectorAll('.decade-chart__axis').forEach((line) => {
         line.style.strokeDashoffset = 1 - yearPhase;
         line.style.opacity = ease(clamp((yearPhase - .85) / .15));
       });
       decadeChart.querySelectorAll('.decade-chart__trend').forEach((line) => { line.style.strokeDashoffset = 1 - totalPhase; });
-      decadeChart.querySelectorAll('.decade-chart__trend').forEach((line) => { line.style.opacity = 1 - ease(clamp(agePhase / .38)); });
+      decadeChart.querySelectorAll('.decade-chart__trend').forEach((line) => { line.style.opacity = (1 - portionPhase) * (1 - ease(clamp(agePhase / .38))); });
     }
     const fieldDots = [...(decadeChart?.querySelectorAll(`.decade-chart__svg--${layout} .decade-chart__target--field`) || [])];
     const totalDots = [...(decadeChart?.querySelectorAll(`.decade-chart__svg--${layout} .decade-chart__target--total`) || [])];
@@ -223,11 +223,11 @@
       });
     }
     if (yearChart) {
-      const portionLabels = portionFill * (1 - totalPhase);
+      const portionLabels = portionFill * (1 - agePhase);
       yearChart.style.opacity = Math.max(yearPhase * (1 - fieldPhase), portionLabels);
       yearChart.querySelectorAll('.year-story__heading--year').forEach((el) => el.setAttribute('opacity', 1 - fieldPhase));
       yearChart.querySelectorAll('.year-story__heading--portion, .year-story__portion-legend').forEach((el) => el.setAttribute('opacity', portionLabels));
-      yearChart.querySelectorAll('.year-story__callout').forEach((el) => el.setAttribute('opacity', paaboPhase * (1 - totalPhase)));
+      decadeChart.querySelectorAll('.decade-chart__paabo').forEach((el) => el.setAttribute('opacity', paaboPhase * (1 - portionPhase) * (1 - agePhase)));
       yearChart.style.pointerEvents = yearPhase > .98 && fieldPhase < .05 ? 'auto' : 'none';
       const yearArrival = ease(clamp((yearPhase - .78) / .22));
       const yearInteractive = yearPhase > .999 && fieldPhase < .01;
@@ -325,7 +325,7 @@
         continue;
       }
       if (agePhase > 0 && totalTargets.has(id) && ageTargets.has(id)) {
-        const from = totalTargets.get(id).getBoundingClientRect();
+        const from = (portionTargets.get(id) || totalTargets.get(id)).getBoundingClientRect();
         const to = ageTargets.get(id).getBoundingClientRect();
         const position = ease(agePhase);
         const ageSize = mix(from.width, to.width, position);
@@ -354,16 +354,16 @@
           byFieldX = mix(byFieldX, portionRect.x + portionRect.width / 2, portionPhase);
           byFieldY = mix(byFieldY, portionRect.y + portionRect.height / 2, portionPhase);
         }
-        const decadeX = mix(byFieldX, totalX, totalPhase);
-        const decadeY = mix(byFieldY, totalY, totalPhase);
+        const decadeX = mix(byFieldX, totalX, totalPhase * (1 - portionPhase));
+        const decadeY = mix(byFieldY, totalY, totalPhase * (1 - portionPhase));
         const decadeSize = mix(yearRect.width, mix(fieldRect.width, totalRect.width, totalPhase), fieldPhase);
         clone.style.width = `${decadeSize}px`;
         clone.style.height = `${decadeSize}px`;
         clone.style.transform = `translate3d(${decadeX - decadeSize / 2}px, ${decadeY - decadeSize / 2}px, 0)`;
-        const econMedDim = isRecentEconMed(source) ? 0 : econMedPhase * (1 - portionPhase);
-        const paaboDim = portionTarget?.dataset.highlight === 'paabo' ? 0 : paaboPhase;
-        clone.style.opacity = 1 - .85 * Math.max(econMedDim, paaboDim) * (1 - totalPhase);
-        setPie(clone, portionShare[portionTarget?.dataset.portion] ?? 1, portionFill * (1 - totalPhase));
+        const econMedDim = isRecentEconMed(source) ? 0 : econMedPhase * (1 - totalPhase);
+        const paaboDim = portionTarget?.dataset.highlight === 'paabo' ? 0 : paaboPhase * (1 - portionPhase);
+        clone.style.opacity = 1 - .85 * Math.max(econMedDim, paaboDim);
+        setPie(clone, portionShare[portionTarget?.dataset.portion] ?? 1, portionFill);
         clone.style.setProperty('--photo-opacity', 0);
         dot.style.opacity = 0;
         continue;

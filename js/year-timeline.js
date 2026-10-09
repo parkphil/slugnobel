@@ -81,11 +81,6 @@
         const x = mobile ? 184 + index * 20 : 96 + (decade - 1930) / 10 * 112;
         const y = mobile ? 80 + (decade - 1930) / 10 * 59 : 333 - index * 19;
         svg.append(node('circle', { class: 'year-story__portion-target', cx: x, cy: y, r: 8, 'data-person-id': person.id, 'data-portion': person.portion, 'data-highlight': person.name === 'Svante Pääbo' ? 'paabo' : '' }));
-        if (person.name === 'Svante Pääbo') {
-          const labelX = x;
-          const labelY = mobile ? y + 26 : 424;
-          svg.append(node('text', { class: 'year-story__callout', x: labelX, y: labelY, 'text-anchor': mobile ? 'start' : 'middle', opacity: 0 }, 'Svante Pääbo, 2022'));
-        }
       });
     yearFigure.append(svg);
   }
@@ -177,22 +172,22 @@
       const yearBox = document.createElement('div');
       yearBox.className = 'intro-scrolly__box intro-scrolly__box--story';
       const yearCopy = document.createElement('p');
-      yearCopy.textContent = 'Berkeley Laureates received their Nobel Prizes between 1934 and 2025.';
+      yearCopy.textContent = 'Berkeley laureates received their Nobel Prizes between 1934 and 2025.';
       yearBox.append(yearCopy);
       yearStep.append(yearBox);
       steps.insertBefore(yearStep, firstDecade);
       const portionStep = step('portion', 'Share of the prize by decade');
       portionStep.append(storyBox('The Nobel Prize monetary award can be divided up to three individuals, either between co-researchers for a single discovery or split between two separate discoveries.'));
-      const decadeTotals = steps.querySelector('[data-decade-step="totals"]');
-      steps.insertBefore(portionStep, decadeTotals);
-      const paaboStep = step('portion-paabo', 'Svante Pääbo, the only full-prize winner since the 1980s');
+      const ageStep = steps.querySelector('[data-story-step="age"]');
+      steps.insertBefore(portionStep, ageStep);
+      const paaboStep = step('decade-paabo', 'Svante Pääbo, the only full-prize winner since the 1980s');
       const paaboBox = storyBox('');
       const paaboCopy = paaboBox.querySelector('p');
       const paaboName = document.createElement('strong');
       paaboName.textContent = 'Svante Pääbo';
       paaboCopy.append(paaboName, ', Berkeley Postdoctoral alum, has been the only individual since the 1980s who has won the entire Nobel Prize portion for his discoveries concerning the genomes of extinct hominins and human evolution in 2022.');
       paaboStep.append(paaboBox);
-      steps.insertBefore(paaboStep, decadeTotals);
+      steps.insertBefore(paaboStep, portionStep);
       steps.append(step('faculty', 'Faculty laureates'));
       dispatchEvent(new Event('year-timeline:ready'));
     })
