@@ -18,7 +18,7 @@ In 1939, physicist Ernest Lawrence won Berkeley’s first Nobel prize for his in
 
 As this year’s Nobel Prize announcements began, The Daily Californian examined the history of Berkeley’s laureates, tracing the recipients and their connections to the university. While the university primarily recognizes 63 Berkeley Nobel Laureates, over 100 Laureates have been associated with Berkeley as alumni, short-term faculty or researchers.
 
-“Our list includes alumni, faculty, emeriti and long-term postdoctoral researchers whose education and careers are rooted here. We expect to add many more Berkeley names in the years ahead,” said Will Kane, a spokesperson for UC Berkeley.
+“Our list includes alumni, faculty, emeriti and long-term postdoctoral researchers whose education and careers are rooted here,” said Will Kane, Executive Director of News & Media Relations for UC Berkeley. “We expect to add many more Berkeley names in the years ahead.”
 
 The university’s list includes Laureates holding a degree from Berkeley, holding a multi-year postdoc or fellowship at Berkeley, or if they are current faculty, emeriti, or faculty who stayed until retirement. Other affiliations, including shorter research appointments or visiting lecturers, generally fall outside this criteria.
 
@@ -68,7 +68,7 @@ Several laureates also contributed to the Manhattan Project, the United States' 
 
 ### Oppenheimer and the Manhattan Project
 
-Berkeley physics professor J. Robert Oppenheimer directed the Manhattan project's Los Alamos Laboratory. He was nominated for the Nobel Prize in Physics three times, but he never received the award.
+Berkeley physics professor J. Robert Oppenheimer directed the Manhattan project's Los Alamos Laboratory. He was nominated for the Nobel Prize in Physics four times, but he never won.
 
 ### Literature laureate highlighted
 
