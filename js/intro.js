@@ -16,7 +16,9 @@
   const normalize = (name) => name.normalize('NFKD').toLowerCase().replace(/[^a-z]/g, '');
   const emphasize = (category) => {
     grid.querySelectorAll('.intro-portrait').forEach((portrait) => {
-      const relationshipMatch = activeFocus === 'all' || (activeFocus === 'Women' ? portrait.dataset.gender === 'female' : portrait.dataset.relationship === activeFocus);
+      // Steven Chu is listed as an alum but also joined the faculty after his prize.
+      const facultyToo = activeFocus === 'Faculty' && portrait.dataset.name === 'Steven Chu';
+      const relationshipMatch = activeFocus === 'all' || facultyToo || (activeFocus === 'Women' ? portrait.dataset.gender === 'female' : portrait.dataset.relationship === activeFocus);
       const categoryMatch = !category || portrait.dataset.category === category;
       portrait.classList.toggle('is-dimmed', !(relationshipMatch && categoryMatch));
     });
@@ -169,6 +171,13 @@
     if (person) openProfile(person);
   });
   dialog.querySelector('.intro-profile__close').addEventListener('click', () => dialog.close());
+  // Clicking the dimmed backdrop around the card also closes it.
+  dialog.addEventListener('click', (event) => {
+    if (event.target !== dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+    if (!inside) dialog.close();
+  });
   addEventListener('open-laureate-profile', (event) => {
     const person = currentPeople.find((candidate) => candidate.id === event.detail?.id);
     if (person) openProfile(person);
@@ -209,6 +218,7 @@
         button.dataset.category = person.category;
         button.dataset.personId = person.id;
         button.dataset.relationship = person.relationship;
+        button.dataset.name = person.name;
         button.dataset.gender = person.gender;
         button.dataset.year = person.year;
         button.style.setProperty('--category-color', colors[person.category]);
