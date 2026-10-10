@@ -68,9 +68,13 @@
 .story-index__link.is-past .story-index__dot { border-color: var(--ink); }
 .story-index__link.is-active .story-index__dot { background: var(--ink); border-color: var(--ink); }
 .story-index__link:focus-visible { outline: none; }
-.story-index__link:focus-visible .story-index__dot { outline: 1px solid var(--ink); outline-offset: 3px; }
+.story-index__link:focus-visible .story-index__label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 @media (max-width: 700px) {
   .story-index { right: 8px; }
   .story-index__label { display: none; }
   .story-index__link { width: 10px; padding: 0; }
+  .story-index__link:focus-visible .story-index__dot { border-color: var(--ink); background: var(--ink); }
 }
